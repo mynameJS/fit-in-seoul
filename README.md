@@ -1,8 +1,58 @@
-# React + Vite
+# 피트인서울 (Fit in Seoul)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+구현 목록
 
-Currently, two official plugins are available:
+1. 메인
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+메인페이지에 네비게이션 바 -> 추천회원, 내운동모임, 운동모임찾기, 내운동친구, 내정보, 회원가입,로그인(비로그인시)
+
+중앙에 소개 이미지 및 글귀
+
+2. 로그인
+
+소셜로그인 구글 1개로 진행, 아이디 중복체크
+
+3. 회원가입
+
+1단계 - id, pw , pw 확인, 이름, 성별, 거주지, 이메일(필요한가? 아직모름)
+2단계 - 회원 관심사 추가 (등산, 헬스, 런닝, 풋살 등)
+3단계 - 닉네임 설정, 자기소개 설정 (닉네임 중복체크 )
+
+사진 등록하는거는 일단 계획에 있긴 한데 후순위로
+
+4. 추천회원
+
+로그인 회원과 등록 관심사 많이 겹치는 회원 순으로 리스트업(페이지네이션)
+회원 리스트 클릭 시 회원 정보 열람 가능(회원 정보 페이지)
+(사진, 자기소개, 친구추가(팔로잉기능), 회원이 쓴 글 보기)
+
+5. 운동모임찾기
+
+글쓰기 기능, 게시글 열람가능, 필수정보 포함된(제목,일시,인원,지역 등) 게시글 리스트업(페이지네이션)
+인원 모집이 완료된 게시글 빼고 리스트업
+게시글 필터링 기능 (지역, 종목, 날짜)
+비로그인 글쓰기 비활성화
+게시글 클릭 시 운동 모임 상세페이지 이동
+
+게시글 작성 페이지(제목, 운동카테고리, 날짜, 인원, 지역, 내용 등)
+해당 운동 모임 신청하기 버튼 누를 시 아래 댓글 기능 오픈 (구체적인 장소 협의 가능)
+상세페이지 내에서 작성자 친구추가 가능
+작성자 일 시 친구추가 버튼 대신 신청인원 보기 버튼 노출
+작성자 일 시 신청하기 버튼 대신 게시글 수정하기 버튼 노출
+
+6. 내운동친구
+   내 친구 리스트 페이지
+   내가 팔로잉한 친구들 리스트업(페이지네이션)
+   사진, 닉네임, 사는곳, 운동관심사, 해당 친구가 쓴 글 보기 구현 (사진은 후순위)
+   리스트 클릭 시 해당 회원 정보 열람 가능
+
+7. 내운동모임
+
+내가 작성한 운동 모임 리스트업
+
+내가 신청한 운동 모임 리스트업
+
+- 기술스택
+  vite+react
+  axios
+  css는 css module 사용할 예정이나 styled Component 고려해볼 예정
