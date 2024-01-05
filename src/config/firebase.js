@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
+// import { getAnalytics } from 'firebase/analytics';
 import { getFirestore } from 'firebase/firestore';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 
@@ -14,13 +14,13 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
 // users 데이터 추가 함수
 async function addData({ id, pw, name, gender, residence, interest, nickname, aboutme }) {
   try {
-    const docRef = await addDoc(collection(db, 'users'), {
+    await addDoc(collection(db, 'users'), {
       id,
       pw,
       name,
