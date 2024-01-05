@@ -54,5 +54,12 @@
 
 - 기술스택
   vite+react
-  axios
+  axios(firebase 쓰니까 굳이 안써도될거같음 현재로서)
   css는 css module 사용할 예정이나 styled Component 고려해볼 예정
+
+  1.6일
+
+firebase 랑 내 프로젝트 연결하고 storage 생성해서 프로젝트랑 연결시켰음
+진짜 처음해봐서 어려웠는데 firebase 공식문서랑 블로그 뒤져가면서 여러 시행착오 끝에 연결 성공
+지금 현재 addData 랑 fetchData 함수 2개 만들어서 컴포넌트화 시켜놨음
+addData 함수에 유저회원가입 인풋 정보 넣으면 firebase storage에 저장되고 fetchData 함수 실행 시 전체 user정보 반환하게끔 설정해놓음
