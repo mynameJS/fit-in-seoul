@@ -1,10 +1,14 @@
 import './App.css';
-import RegisterForm from './components/RegisterForm';
+import UserBasicData from './components/RegisterForm/UserBasicData';
+import UserInterestData from './components/RegisterForm/UserInterestData';
+import UserProfileData from './components/RegisterForm/UserProfileData';
 
 function App() {
   return (
     <>
-      <RegisterForm />
+      <UserBasicData />
+      <UserInterestData />
+      <UserProfileData />
     </>
   );
 }
