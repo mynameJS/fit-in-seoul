@@ -63,3 +63,11 @@ firebase 랑 내 프로젝트 연결하고 storage 생성해서 프로젝트랑 
 진짜 처음해봐서 어려웠는데 firebase 공식문서랑 블로그 뒤져가면서 여러 시행착오 끝에 연결 성공
 지금 현재 addData 랑 fetchData 함수 2개 만들어서 컴포넌트화 시켜놨음
 addData 함수에 유저회원가입 인풋 정보 넣으면 firebase storage에 저장되고 fetchData 함수 실행 시 전체 user정보 반환하게끔 설정해놓음
+
+RegisterForm 1단계 화면 구현완료. 인풋으로 받은 유저 초기정보 받아서 전역상태관리 도구인 recoil 사용한 userInput에 저장되게 만듦
+이제 2단계에 운동취미 인풋받고, 3단계에 닉네임이랑 자기소개글 받아서 firebase storage에 저장할 예정
+
+1.7일
+
+RegisterForm 을 폴더화 시키고 그 안에서 유저 회원가입 시 기본정보, 관심사, 프로필 등 입력컴포넌트를 분리했음
+각각의 컴포넌트 form에서 제출 시 전역상태 Recoil 관리를 해서 userInput에 모두 쌓이게 만들어놓았음
