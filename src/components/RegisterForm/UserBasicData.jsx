@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 import { useState } from 'react';
 import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 
 const Form = styled.form`
   display: flex;
@@ -11,6 +12,8 @@ const Form = styled.form`
 `;
 
 export default function UserBasicData() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     userId: '',
     userPassword: '',
@@ -38,6 +41,7 @@ export default function UserBasicData() {
 
     // Recoil 상태로 나머지 formData를 업데이트
     setUserInput(formDataToStore);
+    navigate('/register_interest');
   };
 
   return (

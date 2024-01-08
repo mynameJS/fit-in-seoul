@@ -33,6 +33,7 @@ export default function UserProfileData() {
   const handleSubmit = e => {
     e.preventDefault();
     setUserInput({ ...userInput, ...formData });
+    console.log(userInput);
   };
 
   return (

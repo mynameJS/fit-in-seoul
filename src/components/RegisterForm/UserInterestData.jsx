@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const UserInterestContainer = styled.div`
   display: flex;
@@ -39,6 +40,8 @@ const InterestListContainer = styled.div`
 const interestList = ['등산', '헬스', '런닝', '풋살', '탁구', '테니스'];
 
 export default function UserInterestData() {
+  const navigate = useNavigate();
+
   const [userInterest, setUserInterest] = useState([]);
 
   const [userInput, setUserInput] = useRecoilState(userInputState);
@@ -58,6 +61,7 @@ export default function UserInterestData() {
     }
     alert('감사합니다!');
     setUserInput({ ...userInput, ['interest']: userInterest });
+    navigate('/register_profile');
   };
 
   return (
