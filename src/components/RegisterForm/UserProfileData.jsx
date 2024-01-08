@@ -2,18 +2,20 @@ import { styled } from 'styled-components';
 import { useState } from 'react';
 import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
+import { userNickNameValidation } from './validation';
 
 const UserProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  margin: 30% auto;
 `;
 
 const UserProfileForm = styled.form`
   display: flex;
   flex-direction: column;
   width: 20%;
-  margin: 0 auto;
   border: 1px solid black;
   padding: 10px;
 `;
@@ -32,6 +34,10 @@ export default function UserProfileData() {
 
   const handleSubmit = e => {
     e.preventDefault();
+    if (!userNickNameValidation(formData.userNickName)) {
+      alert('닉네임은 8자 이하에 특수문자나 공백이 포함될 수 없습니다.');
+      return;
+    }
     setUserInput({ ...userInput, ...formData });
     console.log(userInput);
   };

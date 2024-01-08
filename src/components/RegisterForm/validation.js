@@ -36,4 +36,26 @@ const userPasswordConfirm = (password, passwordConfirm) => {
   return true;
 };
 
-export { userIdValidation, userPasswordValidation, userPasswordConfirm };
+const userInterestValidation = userInput => {
+  if (userInput.length === 0) return false;
+  return true;
+};
+
+const userNickNameValidation = userInput => {
+  const maxLength = 8;
+  if (userInput.length > maxLength) return false;
+
+  const regex = /^[a-zA-Z0-9]+$/;
+  if (!regex.test(userInput)) {
+    return false;
+  }
+  return true;
+};
+
+export {
+  userIdValidation,
+  userPasswordValidation,
+  userPasswordConfirm,
+  userInterestValidation,
+  userNickNameValidation,
+};

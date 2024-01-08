@@ -3,6 +3,7 @@ import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { userInterestValidation } from './validation';
 
 const UserInterestContainer = styled.div`
   display: flex;
@@ -55,7 +56,7 @@ export default function UserInterestData() {
   };
 
   const submitInterest = () => {
-    if (!userInterest.length) {
+    if (!userInterestValidation(userInterest)) {
       alert('최소 1개 이상의 관심사를 등록해주세요!');
       return;
     }
