@@ -2,7 +2,8 @@ import { styled } from 'styled-components';
 import { useState } from 'react';
 import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { userIdValidation, userPasswordValidation, userPasswordConfirm } from './validation';
 
 const Form = styled.form`
   display: flex;
@@ -13,6 +14,7 @@ const Form = styled.form`
 
 export default function UserBasicData() {
   const navigate = useNavigate();
+  const [userInput, setUserInput] = useRecoilState(userInputState);
 
   const [formData, setFormData] = useState({
     userId: '',
@@ -23,8 +25,6 @@ export default function UserBasicData() {
     residence: '',
   });
 
-  const [userInput, setUserInput] = useRecoilState(userInputState);
-
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -32,10 +32,19 @@ export default function UserBasicData() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (formData.userPassword !== formData.userPasswordValid) {
-      alert('비밀번호 확인을 다시 해주세요. 두 값이 일치하지 않습니다.');
+    if (!userIdValidation(formData.userId)) {
+      alert('아이디는 6~10자 사이의 특수문자 및 공백이 포함되지 않아야 합니다.');
       return;
     }
+    if (!userPasswordValidation(formData.userPassword)) {
+      alert('비밀번호는 8자리 이상이며 공백이 포함되지 않아야 합니다.');
+      return;
+    }
+    if (!userPasswordConfirm(formData.userPassword, formData.userPasswordValid)) {
+      alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+      return;
+    }
+
     // userPasswordValid 프로퍼티를 제외한 나머지 formData를 생성
     const { userPasswordValid, ...formDataToStore } = formData;
 
@@ -114,7 +123,7 @@ export default function UserBasicData() {
         <option value="중랑구">중랑구</option>
       </select>
       <button type="submit">가입하기</button>
-      <button type="submit">취 소</button>
+      <Link to={'/login'}>취소</Link>
     </Form>
   );
 }
