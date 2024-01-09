@@ -20,7 +20,7 @@ const userIdValidation = userInput => {
 const userPasswordValidation = userInput => {
   // 비밀번호 8자리 이상
   const minLength = 8;
-  if (userInput.length <= minLength) {
+  if (userInput.length < minLength) {
     return false;
   }
 

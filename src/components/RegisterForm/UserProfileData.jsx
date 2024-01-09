@@ -4,6 +4,7 @@ import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
 import { userNickNameValidation } from './validation';
 import { addData } from '../../config/firebase.js';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfileContainer = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ const UserProfileForm = styled.form`
 `;
 
 export default function UserProfileData() {
+  const navigate = useNavigate();
   const [userInput, setUserInput] = useRecoilState(userInputState);
   const [formData, setFormData] = useState({
     userNickName: '',
@@ -33,14 +35,20 @@ export default function UserProfileData() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     if (!userNickNameValidation(formData.userNickName)) {
       alert('닉네임은 8자 이하에 특수문자나 공백이 포함될 수 없습니다.');
       return;
     }
-    setUserInput({ ...userInput, ...formData });
-    addData(userInput);
+    setUserInput(prevUserInput => {
+      const updatedUserInput = { ...prevUserInput, ...formData };
+      addData(updatedUserInput);
+      console.log(updatedUserInput);
+      return updatedUserInput;
+    });
+    alert('회원가입이 완료되었습니다');
+    navigate('/login');
   };
 
   return (
