@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
 import { useNavigate, Link } from 'react-router-dom';
@@ -20,7 +20,7 @@ const Form = styled.form`
 export default function UserBasicData() {
   const navigate = useNavigate();
   const [userInput, setUserInput] = useRecoilState(userInputState);
-
+  const [isConfirm, setIsConfirm] = useState(true);
   const [formData, setFormData] = useState({
     userId: '',
     userPassword: '',
@@ -30,6 +30,20 @@ export default function UserBasicData() {
     residence: '',
   });
 
+  useEffect(() => {
+    if (toggleIsConfirmState()) {
+      setIsConfirm(true);
+    } else {
+      setIsConfirm(false);
+    }
+  }, [formData]);
+
+  const toggleIsConfirmState = () => {
+    const inputValues = Object.values(formData);
+    // 입력값이 하나라도 빈값이면 ? true 반환
+    return inputValues.some(value => value === '');
+  };
+
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -37,10 +51,7 @@ export default function UserBasicData() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (!userIdValidation(formData.userId)) {
-      alert('아이디는 6~10자 사이의 특수문자 및 공백이 포함되지 않아야 합니다.');
-      return;
-    }
+
     if (!userPasswordValidation(formData.userPassword)) {
       alert('비밀번호는 8자리 이상이며 공백이 포함되지 않아야 합니다.');
       return;
@@ -60,6 +71,12 @@ export default function UserBasicData() {
 
   const handleCheckDuplicateIdClick = async () => {
     const result = await checkDuplicateIdValidation(formData.userId);
+    // 아이디 유효성검사
+    if (!userIdValidation(formData.userId)) {
+      alert('아이디는 6~10자 사이의 특수문자 및 공백이 포함되지 않아야 합니다.');
+      return;
+    }
+    // 중복검사
     if (result) {
       alert('중복된 아이디입니다.');
       return;
@@ -139,7 +156,9 @@ export default function UserBasicData() {
         <option value="중구">중구</option>
         <option value="중랑구">중랑구</option>
       </select>
-      <button type="submit">가입하기</button>
+      <button type="submit" disabled={isConfirm}>
+        가입하기
+      </button>
       <Link to={'/login'}>취소</Link>
     </Form>
   );
