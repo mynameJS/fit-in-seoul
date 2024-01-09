@@ -1,25 +1,22 @@
 import { styled } from 'styled-components';
-import { Link } from 'react-router-dom';
+import { userInputLoginData } from '../atom';
+import { useRecoilValue } from 'recoil';
 
 const HomeContainer = styled.div`
   width: 40%;
   border: 1px solid black;
+  padding: 20px;
   margin: 20% auto;
-  padding: 10px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
+  text-align: center;
 `;
 
 export default function Home() {
+  const loginUserInfo = useRecoilValue(userInputLoginData);
+  console.log(loginUserInfo);
   return (
     <HomeContainer>
-      <p>Fit-In-Seoul 방문해 주셔서 감사합니다!</p>
-      <Link to={'/login'}>
-        <button>운동 친구 만나러 가기</button>
-      </Link>
+      <p>환영합니다!</p>
+      <p>{loginUserInfo.userNickName}님!</p>
     </HomeContainer>
   );
 }

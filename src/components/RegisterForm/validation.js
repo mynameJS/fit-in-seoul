@@ -59,6 +59,18 @@ const checkDuplicateIdValidation = async userInput => {
   return userData.some(({ userId }) => userInput === userId);
 };
 
+const loginConfirmValidation = async ({ userInputId, userInputPassword }) => {
+  const userData = await fetchData();
+  const targetData = userData.find(({ userId }) => userId === userInputId);
+
+  // 일치하는 data 없음
+  if (!targetData) return false;
+  if (targetData.userId === userInputId && targetData.userPassword === userInputPassword) return [targetData, 2];
+
+  // 아이디만 일치
+  return 1;
+};
+
 export {
   userIdValidation,
   userPasswordValidation,
@@ -66,4 +78,5 @@ export {
   userInterestValidation,
   userNickNameValidation,
   checkDuplicateIdValidation,
+  loginConfirmValidation,
 };
