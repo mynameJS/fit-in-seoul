@@ -3,7 +3,12 @@ import { useState } from 'react';
 import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
 import { useNavigate, Link } from 'react-router-dom';
-import { userIdValidation, userPasswordValidation, userPasswordConfirm } from './validation';
+import {
+  userIdValidation,
+  userPasswordValidation,
+  userPasswordConfirm,
+  checkDuplicateIdValidation,
+} from './validation';
 
 const Form = styled.form`
   display: flex;
@@ -53,10 +58,22 @@ export default function UserBasicData() {
     navigate('/register_interest');
   };
 
+  const handleCheckDuplicateIdClick = async () => {
+    const result = await checkDuplicateIdValidation(formData.userId);
+    if (result) {
+      alert('중복된 아이디입니다.');
+      return;
+    }
+    alert('사용하실 수 있는 아이디입니다.');
+  };
+
   return (
     <Form onSubmit={handleSubmit} method="post">
       <label htmlFor="userId">아이디 </label>
       <input type="text" id="userId" name="userId" value={formData.userId} onChange={handleChange} />
+      <button type="button" onClick={handleCheckDuplicateIdClick}>
+        중복검사
+      </button>
       <label htmlFor="userPassword">비밀번호 </label>
       <input
         type="password"

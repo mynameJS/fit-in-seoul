@@ -18,17 +18,17 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // users 데이터 추가 함수
-async function addData({ id, pw, name, gender, residence, interest, nickname, aboutme }) {
+async function addData({ userId, userPassword, userName, gender, residence, interest, userNickName, userIntroduce }) {
   try {
     await addDoc(collection(db, 'users'), {
-      id,
-      pw,
-      name,
+      userId,
+      userPassword,
+      userName,
       gender,
       residence,
       interest,
-      nickname,
-      aboutme,
+      userNickName,
+      userIntroduce,
     });
   } catch (e) {
     console.error('Error adding document: ', e);

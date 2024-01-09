@@ -1,3 +1,5 @@
+import { fetchData } from '../../config/firebase.js';
+
 // 아이디 유효성 검사
 const userIdValidation = userInput => {
   // 아이디 6 ~ 10자 사이
@@ -45,11 +47,16 @@ const userNickNameValidation = userInput => {
   const maxLength = 8;
   if (userInput.length > maxLength) return false;
 
-  const regex = /^[a-zA-Z0-9]+$/;
+  const regex = /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]+$/;
   if (!regex.test(userInput)) {
     return false;
   }
   return true;
+};
+
+const checkDuplicateIdValidation = async userInput => {
+  const userData = await fetchData();
+  return userData.some(({ userId }) => userInput === userId);
 };
 
 export {
@@ -58,4 +65,5 @@ export {
   userPasswordConfirm,
   userInterestValidation,
   userNickNameValidation,
+  checkDuplicateIdValidation,
 };
