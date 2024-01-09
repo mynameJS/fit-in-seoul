@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
 import { userNickNameValidation } from './validation';
+import { addData } from '../../config/firebase.js';
 
 const UserProfileContainer = styled.div`
   display: flex;
@@ -24,7 +25,7 @@ export default function UserProfileData() {
   const [userInput, setUserInput] = useRecoilState(userInputState);
   const [formData, setFormData] = useState({
     userNickName: '',
-    userAboutMe: '',
+    userIntroduce: '',
   });
 
   const handleChange = e => {
@@ -39,7 +40,7 @@ export default function UserProfileData() {
       return;
     }
     setUserInput({ ...userInput, ...formData });
-    console.log(userInput);
+    addData(userInput);
   };
 
   return (
@@ -48,12 +49,12 @@ export default function UserProfileData() {
       <UserProfileForm onSubmit={handleSubmit} method="post">
         <label htmlFor="userNickName">닉네임</label>
         <input type="text" id="userNickName" name="userNickName" value={formData.userNick} onChange={handleChange} />
-        <label htmlFor="userAboutMe">자기소개</label>
+        <label htmlFor="userIntroduce">자기소개</label>
         <textarea
           type="text"
-          id="userAboutMe"
-          name="userAboutMe"
-          value={formData.userAboutMe}
+          id="userIntroduce"
+          name="userIntroduce"
+          value={formData.userIntroduce}
           onChange={handleChange}
         />
         <button>확인</button>
