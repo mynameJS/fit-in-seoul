@@ -1,6 +1,10 @@
 import { styled } from 'styled-components';
-import { userInputLoginData } from '../atom';
-import { useRecoilValue } from 'recoil';
+import { currentLoginUserData } from '../atom';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+import { fetchLoginUserData } from '../config/firebase';
+import { logOutUser } from '../config/firebase';
 
 const HomeContainer = styled.div`
   width: 40%;
@@ -11,12 +15,31 @@ const HomeContainer = styled.div`
 `;
 
 export default function Home() {
-  const loginUserInfo = useRecoilValue(userInputLoginData);
-  console.log(loginUserInfo);
+  const navigate = useNavigate();
+  const [currentUserData, setCurrentUserData] = useRecoilState(currentLoginUserData);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const currentLoginUserInfo = await fetchLoginUserData();
+      console.log({ currentLoginUserInfo });
+      setCurrentUserData(currentLoginUserInfo);
+    };
+
+    fetchData();
+  }, []);
+
+  const handleLogoutClick = () => {
+    logOutUser();
+    navigate('/login');
+  };
+
   return (
     <HomeContainer>
-      <p>환영합니다!</p>
-      <p>{loginUserInfo.userNickName}님!</p>
+      <>
+        <p>환영합니다!</p>
+        <p>{currentUserData.userNickName}님!</p>
+        <button onClick={handleLogoutClick}>로그아웃</button>
+      </>
     </HomeContainer>
   );
 }

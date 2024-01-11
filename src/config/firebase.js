@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-// import { getAnalytics } from 'firebase/analytics';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 
@@ -14,29 +14,11 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
+const auth = getAuth(app);
 const db = getFirestore(app);
 
-// users 데이터 추가 함수
-async function addData({ userId, userPassword, userName, gender, residence, interest, userNickName, userIntroduce }) {
-  try {
-    await addDoc(collection(db, 'users'), {
-      userId,
-      userPassword,
-      userName,
-      gender,
-      residence,
-      interest,
-      userNickName,
-      userIntroduce,
-    });
-  } catch (e) {
-    console.error('Error adding document: ', e);
-  }
-}
-
 // users 데이터 반환함수
-async function fetchData() {
+const fetchData = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, 'users'));
     const data = [];
@@ -53,6 +35,97 @@ async function fetchData() {
     console.error('Error fetching data: ', error);
     return [];
   }
-}
+};
 
-export { addData, fetchData };
+// users 데이터 추가 함수
+const addData = async ({
+  userEmail,
+  userPassword,
+  userName,
+  gender,
+  residence,
+  interest,
+  userNickName,
+  userIntroduce,
+}) => {
+  try {
+    await addDoc(collection(db, 'users'), {
+      userEmail,
+      userPassword,
+      userName,
+      gender,
+      residence,
+      interest,
+      userNickName,
+      userIntroduce,
+    });
+  } catch (e) {
+    console.error('Error adding document: ', e);
+  }
+};
+
+// 신규가입
+const addNewUser = async (userEmail, userPassword) => {
+  try {
+    await createUserWithEmailAndPassword(auth, userEmail, userPassword);
+  } catch (error) {
+    const errorMessage = error.message;
+    console.log({ errorMessage });
+  }
+};
+
+// 기존 사용자 로그인
+const loginExistUser = async (userEmail, userPassword) => {
+  try {
+    const loginUser = await signInWithEmailAndPassword(auth, userEmail, userPassword);
+    console.log(loginUser);
+  } catch (error) {
+    const errorMessage = error.message;
+    console.log({ errorMessage });
+  }
+};
+
+// 회원 로그아웃
+const logOutUser = () => {
+  auth.signOut();
+};
+
+// 로그인 유저 이메일 받기
+const getLoginUser = () => {
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(
+      auth,
+      user => {
+        if (user) {
+          const { email } = user;
+          resolve(email);
+        } else {
+          resolve(null);
+        }
+      },
+      reject
+    );
+  });
+};
+
+// getLoginUser 함수를 이용하여 로그인 유저의 이메일로 유저정보 받기 (비로그인 시 null)
+const fetchLoginUserData = async () => {
+  try {
+    const currentLoginUserEmail = await getLoginUser();
+    if (currentLoginUserEmail) {
+      console.log('로그인된 사용자의 이메일:', currentLoginUserEmail);
+      const userData = await fetchData();
+      const targetData = userData.find(({ userEmail }) => userEmail === currentLoginUserEmail);
+      console.log(targetData);
+      return targetData;
+    } else {
+      console.log('사용자가 로그아웃 상태입니다.');
+      return null;
+    }
+  } catch (error) {
+    console.error('에러 발생:', error);
+    return null;
+  }
+};
+
+export { addData, fetchData, addNewUser, loginExistUser, fetchLoginUserData, logOutUser };

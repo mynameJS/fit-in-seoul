@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
 import { userNickNameValidation } from './validation';
-import { addData } from '../../config/firebase.js';
+import { addData, addNewUser } from '../../config/firebase.js';
 import { useNavigate } from 'react-router-dom';
 
 const UserProfileContainer = styled.div`
@@ -43,6 +43,7 @@ export default function UserProfileData() {
     }
     setUserInput(prevUserInput => {
       const updatedUserInput = { ...prevUserInput, ...formData };
+      addNewUser(userInput.userEmail, userInput.userPassword);
       addData(updatedUserInput);
       console.log(updatedUserInput);
       return updatedUserInput;
