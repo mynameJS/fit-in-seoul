@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-// import { getAnalytics } from 'firebase/analytics';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 
@@ -14,14 +14,46 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
+const auth = getAuth(app);
 const db = getFirestore(app);
 
+// 신규가입
+const addNewUser = async (userEmail, userPassword) => {
+  try {
+    const createUser = await createUserWithEmailAndPassword(auth, userEmail, userPassword);
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log({ errorMessage });
+  }
+};
+
+// 기존 사용자 로그인
+const loginExistUser = async (userEmail, userPassword) => {
+  try {
+    const loginUser = await signInWithEmailAndPassword(auth, userEmail, userPassword);
+    console.log(loginUser);
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log({ errorMessage });
+  }
+};
+
 // users 데이터 추가 함수
-async function addData({ userId, userPassword, userName, gender, residence, interest, userNickName, userIntroduce }) {
+async function addData({
+  userEmail,
+  userPassword,
+  userName,
+  gender,
+  residence,
+  interest,
+  userNickName,
+  userIntroduce,
+}) {
   try {
     await addDoc(collection(db, 'users'), {
-      userId,
+      userEmail,
       userPassword,
       userName,
       gender,
@@ -55,4 +87,4 @@ async function fetchData() {
   }
 }
 
-export { addData, fetchData };
+export { addData, fetchData, addNewUser, loginExistUser };

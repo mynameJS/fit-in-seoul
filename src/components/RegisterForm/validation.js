@@ -17,6 +17,13 @@ const userIdValidation = userInput => {
   return true;
 };
 
+// 이메일 유효성검사
+const userEmailValidation = userInput => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 이메일 형식을 정의한 정규표현식
+
+  return re.test(String(userInput).toLowerCase()); // 정규표현식과 매칭되는지 확인하여 유효성 검사
+};
+
 const userPasswordValidation = userInput => {
   // 비밀번호 8자리 이상
   const minLength = 8;
@@ -56,19 +63,19 @@ const userNickNameValidation = userInput => {
 
 const checkDuplicateIdValidation = async userInput => {
   const userData = await fetchData();
-  return userData.some(({ userId }) => userInput === userId);
+  return userData.some(({ userEmail }) => userInput === userEmail);
 };
 
-const loginConfirmValidation = async ({ userInputId, userInputPassword }) => {
+const loginConfirmValidation = async ({ userInputEmail, userInputPassword }) => {
   const userData = await fetchData();
-  const targetData = userData.find(({ userId }) => userId === userInputId);
+  const targetData = userData.find(({ userEmail }) => userEmail === userInputEmail);
 
   // 일치하는 data 없음
-  if (!targetData) return false;
-  if (targetData.userId === userInputId && targetData.userPassword === userInputPassword) return [targetData, 2];
+  if (!targetData) return [targetData, false];
+  if (targetData.userEmail === userInputEmail && targetData.userPassword === userInputPassword) return [targetData, 2];
 
   // 아이디만 일치
-  return 1;
+  return [null, 1];
 };
 
 export {
@@ -79,4 +86,5 @@ export {
   userNickNameValidation,
   checkDuplicateIdValidation,
   loginConfirmValidation,
+  userEmailValidation,
 };

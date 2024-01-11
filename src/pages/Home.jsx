@@ -12,7 +12,6 @@ const HomeContainer = styled.div`
 
 export default function Home() {
   const loginUserInfo = useRecoilValue(userInputLoginData);
-  console.log(loginUserInfo);
   return (
     <HomeContainer>
       <p>환영합니다!</p>

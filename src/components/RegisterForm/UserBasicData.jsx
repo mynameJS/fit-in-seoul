@@ -3,8 +3,9 @@ import { useState, useEffect } from 'react';
 import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
 import { useNavigate, Link } from 'react-router-dom';
+// import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import {
-  userIdValidation,
+  userEmailValidation,
   userPasswordValidation,
   userPasswordConfirm,
   checkDuplicateIdValidation,
@@ -22,7 +23,7 @@ export default function UserBasicData() {
   const [userInput, setUserInput] = useRecoilState(userInputState);
   const [isConfirm, setIsConfirm] = useState(true);
   const [formData, setFormData] = useState({
-    userId: '',
+    userEmail: '',
     userPassword: '',
     userPasswordValid: '',
     userName: '',
@@ -70,24 +71,24 @@ export default function UserBasicData() {
   };
 
   const handleCheckDuplicateIdClick = async () => {
-    const result = await checkDuplicateIdValidation(formData.userId);
-    // 아이디 유효성검사
-    if (!userIdValidation(formData.userId)) {
-      alert('아이디는 6~10자 사이의 특수문자 및 공백이 포함되지 않아야 합니다.');
+    const result = await checkDuplicateIdValidation(formData.userEmail);
+    // 이메일 유효성검사
+    if (!userEmailValidation(formData.userEmail)) {
+      alert('유효하지 않은 이메일 형식입니다.');
       return;
     }
     // 중복검사
     if (result) {
-      alert('중복된 아이디입니다.');
+      alert('이미 등록된 이메일 입니다..');
       return;
     }
-    alert('사용하실 수 있는 아이디입니다.');
+    alert('사용하실 수 있는 이메일 입니다.');
   };
 
   return (
     <Form onSubmit={handleSubmit} method="post">
-      <label htmlFor="userId">아이디 </label>
-      <input type="text" id="userId" name="userId" value={formData.userId} onChange={handleChange} />
+      <label htmlFor="userEmail">이메일 </label>
+      <input type="email" id="userEmail" name="userEmail" value={formData.userEmail} onChange={handleChange} />
       <button type="button" onClick={handleCheckDuplicateIdClick}>
         중복검사
       </button>
