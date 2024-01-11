@@ -75,7 +75,7 @@ const loginConfirmValidation = async ({ userInputEmail, userInputPassword }) => 
   if (targetData.userEmail === userInputEmail && targetData.userPassword === userInputPassword) return 2;
 
   // 아이디만 일치
-  return 1;
+  return [null, 1];
 };
 
 export {

@@ -86,8 +86,8 @@ const loginExistUser = async (userEmail, userPassword) => {
 };
 
 // 회원 로그아웃
-const logOutUser = () => {
-  auth.signOut();
+const logOutUser = async () => {
+  await auth.signOut();
 };
 
 // 로그인 유저 이메일 받기
@@ -116,7 +116,6 @@ const fetchLoginUserData = async () => {
       console.log('로그인된 사용자의 이메일:', currentLoginUserEmail);
       const userData = await fetchData();
       const targetData = userData.find(({ userEmail }) => userEmail === currentLoginUserEmail);
-      console.log(targetData);
       return targetData;
     } else {
       console.log('사용자가 로그아웃 상태입니다.');
@@ -128,4 +127,4 @@ const fetchLoginUserData = async () => {
   }
 };
 
-export { addData, fetchData, addNewUser, loginExistUser, fetchLoginUserData, logOutUser };
+export { addData, fetchData, addNewUser, loginExistUser, fetchLoginUserData, logOutUser, auth };

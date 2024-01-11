@@ -1,10 +1,11 @@
 import { styled } from 'styled-components';
 import { currentLoginUserData } from '../atom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { fetchLoginUserData } from '../config/firebase';
 import { logOutUser } from '../config/firebase';
+import { auth } from '../config/firebase';
 
 const HomeContainer = styled.div`
   width: 40%;
@@ -17,28 +18,40 @@ const HomeContainer = styled.div`
 export default function Home() {
   const navigate = useNavigate();
   const [currentUserData, setCurrentUserData] = useRecoilState(currentLoginUserData);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const currentLoginUserInfo = await fetchLoginUserData();
-      console.log({ currentLoginUserInfo });
-      setCurrentUserData(currentLoginUserInfo);
+      try {
+        const currentLoginUserInfo = await fetchLoginUserData();
+        setCurrentUserData(currentLoginUserInfo);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
   }, []);
 
-  const handleLogoutClick = () => {
-    logOutUser();
+  const handleLogoutClick = async () => {
+    await logOutUser();
     navigate('/login');
   };
 
   return (
     <HomeContainer>
       <>
-        <p>환영합니다!</p>
-        <p>{currentUserData.userNickName}님!</p>
-        <button onClick={handleLogoutClick}>로그아웃</button>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <p>환영합니다!</p>
+            <p>{currentUserData.userNickName}님!</p>
+            <button onClick={handleLogoutClick}>로그아웃</button>
+          </>
+        )}
       </>
     </HomeContainer>
   );

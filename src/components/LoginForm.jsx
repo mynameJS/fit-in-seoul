@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { loginConfirmValidation } from './RegisterForm/validation';
 import { useNavigate } from 'react-router-dom';
-import { fetchLoginUserData, loginExistUser } from '../config/firebase';
-import { useSetRecoilState } from 'recoil';
-import { currentLoginUserData } from '../atom';
+import { loginExistUser } from '../config/firebase';
+import { auth } from '../config/firebase';
 
 const LoginFormContainer = styled.div`
   width: 40%;
