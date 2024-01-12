@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { loginConfirmValidation } from './RegisterForm/validation';
 import { useNavigate } from 'react-router-dom';
-import { loginExistUser } from '../config/firebase';
-import { auth } from '../config/firebase';
+import { loginExistUser, googleLoginUser, fetchLoginUserData } from '../config/firebase';
 
 const LoginFormContainer = styled.div`
   width: 40%;
@@ -54,6 +53,18 @@ export default function LoginForm() {
     }
   };
 
+  const handleGoogleLoginClick = async () => {
+    await googleLoginUser();
+    const existGoogleUser = await fetchLoginUserData();
+    // 구글 로그인 회원이 이미 가입한 적이 있는 회원이라면 바로 홈으로 이동
+    if (existGoogleUser) {
+      navigate('/home');
+      // 신규회원이라면 회원정보 등록페이지로 읻동
+    } else {
+      navigate('/register_basic');
+    }
+  };
+
   return (
     <LoginFormContainer>
       <LoginFormTag onSubmit={handleSubmit} method="post">
@@ -78,7 +89,7 @@ export default function LoginForm() {
       <Link to={'/register_basic'}>
         <p>회원가입</p>
       </Link>
-      <p>소셜로그인</p>
+      <button onClick={handleGoogleLoginClick}>소셜로그인</button>
       <Link to={'/'}>
         <p>홈으로</p>
       </Link>

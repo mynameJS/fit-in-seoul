@@ -5,6 +5,7 @@ import { useRecoilState } from 'recoil';
 import { userNickNameValidation } from './validation';
 import { addData, addNewUser } from '../../config/firebase.js';
 import { useNavigate } from 'react-router-dom';
+import { auth } from '../../config/firebase.js';
 
 const UserProfileContainer = styled.div`
   display: flex;
@@ -29,6 +30,7 @@ export default function UserProfileData() {
     userNickName: '',
     userIntroduce: '',
   });
+  const isGoogle = auth.currentUser?.providerData[0]?.providerId === 'google.com';
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -43,13 +45,19 @@ export default function UserProfileData() {
     }
     setUserInput(prevUserInput => {
       const updatedUserInput = { ...prevUserInput, ...formData };
-      addNewUser(userInput.userEmail, userInput.userPassword);
+      // 구글사용자 아니라면
+      if (!isGoogle) {
+        addNewUser(userInput.userEmail, userInput.userPassword);
+      }
       addData(updatedUserInput);
-      console.log(updatedUserInput);
       return updatedUserInput;
     });
     alert('회원가입이 완료되었습니다');
-    navigate('/login');
+    if (!isGoogle) {
+      navigate('/login');
+    } else {
+      navigate('/home');
+    }
   };
 
   return (

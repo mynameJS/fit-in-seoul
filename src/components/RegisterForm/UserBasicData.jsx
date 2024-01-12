@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
 import { useNavigate, Link } from 'react-router-dom';
-// import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../config/firebase';
 import {
   userEmailValidation,
   userPasswordValidation,
@@ -20,6 +20,7 @@ const Form = styled.form`
 
 export default function UserBasicData() {
   const navigate = useNavigate();
+  // 구글 로그인 확인
   const [userInput, setUserInput] = useRecoilState(userInputState);
   const [isConfirm, setIsConfirm] = useState(true);
   const [formData, setFormData] = useState({
@@ -31,6 +32,8 @@ export default function UserBasicData() {
     residence: '',
   });
 
+  const isGoogle = auth.currentUser?.providerData[0]?.providerId === 'google.com';
+
   useEffect(() => {
     if (toggleIsConfirmState()) {
       setIsConfirm(true);
@@ -38,6 +41,20 @@ export default function UserBasicData() {
       setIsConfirm(false);
     }
   }, [formData]);
+
+  useEffect(() => {
+    if (isGoogle) {
+      const googleUserInfo = {
+        userEmail: auth.currentUser.email,
+        userPassword: null,
+        userPasswordValid: null,
+      };
+      setFormData({
+        ...formData,
+        ...googleUserInfo,
+      });
+    }
+  }, []);
 
   const toggleIsConfirmState = () => {
     const inputValues = Object.values(formData);
@@ -52,16 +69,16 @@ export default function UserBasicData() {
 
   const handleSubmit = e => {
     e.preventDefault();
-
-    if (!userPasswordValidation(formData.userPassword)) {
-      alert('비밀번호는 8자리 이상이며 공백이 포함되지 않아야 합니다.');
-      return;
+    if (!isGoogle) {
+      if (!userPasswordValidation(formData.userPassword)) {
+        alert('비밀번호는 8자리 이상이며 공백이 포함되지 않아야 합니다.');
+        return;
+      }
+      if (!userPasswordConfirm(formData.userPassword, formData.userPasswordValid)) {
+        alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+        return;
+      }
     }
-    if (!userPasswordConfirm(formData.userPassword, formData.userPasswordValid)) {
-      alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-      return;
-    }
-
     // userPasswordValid 프로퍼티를 제외한 나머지 formData를 생성
     const { userPasswordValid, ...formDataToStore } = formData;
 
@@ -87,27 +104,31 @@ export default function UserBasicData() {
 
   return (
     <Form onSubmit={handleSubmit} method="post">
-      <label htmlFor="userEmail">이메일 </label>
-      <input type="email" id="userEmail" name="userEmail" value={formData.userEmail} onChange={handleChange} />
-      <button type="button" onClick={handleCheckDuplicateIdClick}>
-        중복검사
-      </button>
-      <label htmlFor="userPassword">비밀번호 </label>
-      <input
-        type="password"
-        id="userPassword"
-        name="userPassword"
-        value={formData.userPassword}
-        onChange={handleChange}
-      />
-      <label htmlFor="userPasswordValid">비밀번호 확인 </label>
-      <input
-        type="password"
-        id="userPasswordValid"
-        name="userPasswordValid"
-        value={formData.userPasswordValid}
-        onChange={handleChange}
-      />
+      {!isGoogle && (
+        <>
+          <label htmlFor="userEmail">이메일 </label>
+          <input type="email" id="userEmail" name="userEmail" value={formData.userEmail} onChange={handleChange} />
+          <button type="button" onClick={handleCheckDuplicateIdClick}>
+            중복검사
+          </button>
+          <label htmlFor="userPassword">비밀번호 </label>
+          <input
+            type="password"
+            id="userPassword"
+            name="userPassword"
+            value={formData.userPassword}
+            onChange={handleChange}
+          />
+          <label htmlFor="userPasswordValid">비밀번호 확인 </label>
+          <input
+            type="password"
+            id="userPasswordValid"
+            name="userPasswordValid"
+            value={formData.userPasswordValid}
+            onChange={handleChange}
+          />
+        </>
+      )}
       <label htmlFor="userName">이름 </label>
       <input type="text" id="userName" name="userName" value={formData.userName} onChange={handleChange} />
       <label htmlFor="male">남 </label>

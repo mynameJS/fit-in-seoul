@@ -5,7 +5,6 @@ import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { fetchLoginUserData } from '../config/firebase';
 import { logOutUser } from '../config/firebase';
-import { auth } from '../config/firebase';
 
 const HomeContainer = styled.div`
   width: 40%;

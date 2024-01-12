@@ -1,5 +1,12 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 
@@ -16,6 +23,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+// 구글 로그인
+const provider = new GoogleAuthProvider();
 
 // users 데이터 반환함수
 const fetchData = async () => {
@@ -78,10 +87,33 @@ const addNewUser = async (userEmail, userPassword) => {
 const loginExistUser = async (userEmail, userPassword) => {
   try {
     const loginUser = await signInWithEmailAndPassword(auth, userEmail, userPassword);
-    console.log(loginUser);
   } catch (error) {
     const errorMessage = error.message;
-    console.log({ errorMessage });
+    console.error(errorMessage);
+  }
+};
+
+// 구글 소셜 로그인
+const googleLoginUser = async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+    // The signed-in user info.
+    const user = result.user;
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+  } catch (error) {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
   }
 };
 
@@ -127,4 +159,4 @@ const fetchLoginUserData = async () => {
   }
 };
 
-export { addData, fetchData, addNewUser, loginExistUser, fetchLoginUserData, logOutUser, auth };
+export { addData, fetchData, addNewUser, loginExistUser, fetchLoginUserData, logOutUser, googleLoginUser, auth };
