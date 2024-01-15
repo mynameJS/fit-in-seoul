@@ -1,7 +1,5 @@
 import { styled } from 'styled-components';
-import { currentLoginUserData } from '../atom';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { fetchLoginUserData } from '../config/firebase';
 import { logOutUser } from '../config/firebase';
@@ -16,14 +14,16 @@ const HomeContainer = styled.div`
 
 export default function Home() {
   const navigate = useNavigate();
-  const [currentUserData, setCurrentUserData] = useRecoilState(currentLoginUserData);
   const [loading, setLoading] = useState(true);
+  const currentUserDataInfo = JSON.parse(localStorage.getItem('currentUser'));
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const currentLoginUserInfo = await fetchLoginUserData();
-        setCurrentUserData(currentLoginUserInfo);
+        const { id, userPassword, ...needUserData } = currentLoginUserInfo;
+        // 필요한 유저 정보만 로컬스토리지에 저장
+        localStorage.setItem('currentUser', JSON.stringify(needUserData));
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -33,10 +33,15 @@ export default function Home() {
 
     fetchData();
   }, []);
-
+  console.log(currentUserDataInfo);
   const handleLogoutClick = async () => {
     await logOutUser();
+    localStorage.removeItem('currentUser');
     navigate('/login');
+  };
+
+  const handleRecommendPageClick = () => {
+    navigate('/recommend');
   };
 
   return (
@@ -47,8 +52,9 @@ export default function Home() {
         ) : (
           <>
             <p>환영합니다!</p>
-            <p>{currentUserData.userNickName}님!</p>
+            <p>{currentUserDataInfo.userNickName}님!</p>
             <button onClick={handleLogoutClick}>로그아웃</button>
+            <button onClick={handleRecommendPageClick}>추천회원</button>
           </>
         )}
       </>
