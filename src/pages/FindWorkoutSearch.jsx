@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { fetchPostingData } from '../config/firebase';
+import { useState, useEffect } from 'react';
 
 const FindWorkoutSearchContainer = styled.div`
   width: 50rem;
@@ -16,6 +18,24 @@ const FindWorkoutSearchContainer = styled.div`
 
 export default function FindWorkoutSearch() {
   const navigate = useNavigate();
+  const [postingData, setPostingData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const postingData = await fetchPostingData();
+        setPostingData(postingData);
+      } catch (error) {
+        console.error('Error fetching posting data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <FindWorkoutSearchContainer>
       <p>운동모임찾기</p>
@@ -28,13 +48,18 @@ export default function FindWorkoutSearch() {
         </button>
       </div>
       <div>필터링</div>
-      <div>
-        <div>게시글1</div>
-        <div>게시글2</div>
-        <div>게시글3</div>
-        <div>게시글4</div>
-        <div>게시글5</div>
-      </div>
+      <div>{loading ? <p>Loading...</p> : postingData.map(data => <PostingCard key={data.id} data={data} />)}</div>
     </FindWorkoutSearchContainer>
+  );
+}
+
+function PostingCard({ data }) {
+  return (
+    <div>
+      <p>{data.title}</p>
+      <p>일시 : {data.date}</p>
+      <p>모집인원 : {data.count}명</p>
+      <p>위치 : 서울시 {data.location}</p>
+    </div>
   );
 }

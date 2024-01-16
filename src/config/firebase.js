@@ -186,6 +186,26 @@ const addPostingData = async ({ writer, title, category, date, count, location, 
   }
 };
 
+// posting 데이터 반환함수
+const fetchPostingData = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'post'));
+    const data = [];
+
+    querySnapshot.forEach(doc => {
+      data.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching posting data: ', error);
+    return [];
+  }
+};
+
 export {
   addData,
   fetchData,
@@ -196,5 +216,6 @@ export {
   googleLoginUser,
   updateData,
   addPostingData,
+  fetchPostingData,
   auth,
 };
