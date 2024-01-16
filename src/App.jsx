@@ -11,6 +11,7 @@ import MyWorkoutGroup from './pages/MyWorkoutGroup';
 import MyWorkoutFriend from './pages/MyWorkoutFriend';
 import FindWorkoutSearch from './pages/FindWorkoutSearch';
 import MyInfo from './pages/MyInfo';
+import PostingForm from './pages/PostingForm';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Route path="/friend" element={<MyWorkoutFriend />} />
       <Route path="/search" element={<FindWorkoutSearch />} />
       <Route path="/info" element={<MyInfo />} />
+      <Route path="/posting" element={<PostingForm />} />
     </Routes>
   );
 }

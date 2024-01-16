@@ -35,17 +35,6 @@ const updateData = async (docId, newData) => {
     console.error('Error updating document: ', e);
   }
 };
-const testId = '9EbAI2MaOnJRDBFum8n8';
-const testData = {
-  gender: 'female',
-  interest: ['등산', '탁구'],
-  residence: '도봉구',
-  userEmail: 'envijs93@gamil.com',
-  userIntroduce: '안녕하세용 새로바꿨어용',
-  userName: '임구글글',
-  userNickName: '구글이용자에용용',
-};
-// updateData(testId, testData);
 
 // users 데이터 반환함수
 const fetchData = async () => {
@@ -180,6 +169,23 @@ const fetchLoginUserData = async () => {
   }
 };
 
+// posting 데이터 추가 함수
+const addPostingData = async ({ writer, title, category, date, count, location, content }) => {
+  try {
+    await addDoc(collection(db, 'post'), {
+      writer,
+      title,
+      category,
+      date,
+      count,
+      location,
+      content,
+    });
+  } catch (e) {
+    console.error('Error adding posting: ', e);
+  }
+};
+
 export {
   addData,
   fetchData,
@@ -189,5 +195,6 @@ export {
   logOutUser,
   googleLoginUser,
   updateData,
+  addPostingData,
   auth,
 };
