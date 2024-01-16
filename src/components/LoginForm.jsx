@@ -57,6 +57,7 @@ export default function LoginForm() {
     await googleLoginUser();
     const existGoogleUser = await fetchLoginUserData();
     // 구글 로그인 회원이 이미 가입한 적이 있는 회원이라면 바로 홈으로 이동
+    console.log(existGoogleUser);
     if (existGoogleUser) {
       navigate('/home');
       // 신규회원이라면 회원정보 등록페이지로 읻동

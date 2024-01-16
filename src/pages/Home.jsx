@@ -21,7 +21,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const currentLoginUserInfo = await fetchLoginUserData();
-        const { id, userPassword, ...needUserData } = currentLoginUserInfo;
+        const { userPassword, ...needUserData } = currentLoginUserInfo;
         // 필요한 유저 정보만 로컬스토리지에 저장
         localStorage.setItem('currentUser', JSON.stringify(needUserData));
       } catch (error) {

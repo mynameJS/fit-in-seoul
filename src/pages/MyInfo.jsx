@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { updateData } from '../config/firebase';
 
 const MyInfoContainer = styled.div`
   width: 50rem;
@@ -23,6 +25,21 @@ const MyInfoContainer = styled.div`
 export default function MyInfo() {
   const navigate = useNavigate();
   const myInfo = JSON.parse(localStorage.getItem('currentUser'));
+  const [isEdit, setIsEdit] = useState(false);
+  const [editValue, setEditValue] = useState(myInfo.userIntroduce);
+
+  const editIntroduceHandler = async () => {
+    const userId = myInfo.id;
+    const { id, userIntroduce, ...preData } = myInfo;
+    const newData = {
+      ...preData,
+      userIntroduce: editValue,
+    };
+    await updateData(userId, newData);
+    localStorage.setItem('currentUser', JSON.stringify({ ...myInfo, userIntroduce: editValue }));
+    setIsEdit(!isEdit);
+  };
+
   console.log(myInfo);
   return (
     <MyInfoContainer>
@@ -35,11 +52,27 @@ export default function MyInfo() {
           />
         </div>
         <div>
-          <p>{myInfo.userIntroduce}</p>
+          {isEdit && (
+            <div>
+              <input
+                value={editValue}
+                onChange={e => {
+                  setEditValue(e.target.value);
+                }}
+              />
+              <button onClick={editIntroduceHandler}>수정하기</button>
+            </div>
+          )}
+          {!isEdit && <p>{myInfo.userIntroduce}</p>}
         </div>
       </div>
       <div>
-        <button>친구추가</button>
+        <button
+          onClick={() => {
+            setIsEdit(!isEdit);
+          }}>
+          프로필 편집
+        </button>
         <button>내가 쓴 글 보기</button>
         <button
           onClick={() => {

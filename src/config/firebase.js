@@ -7,8 +7,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -25,6 +24,28 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 // 구글 로그인
 const provider = new GoogleAuthProvider();
+
+// users 정보 업데이트
+const updateData = async (docId, newData) => {
+  try {
+    const userRef = doc(db, 'users', docId);
+    await updateDoc(userRef, newData);
+    console.log('Document updated successfully!');
+  } catch (e) {
+    console.error('Error updating document: ', e);
+  }
+};
+const testId = '9EbAI2MaOnJRDBFum8n8';
+const testData = {
+  gender: 'female',
+  interest: ['등산', '탁구'],
+  residence: '도봉구',
+  userEmail: 'envijs93@gamil.com',
+  userIntroduce: '안녕하세용 새로바꿨어용',
+  userName: '임구글글',
+  userNickName: '구글이용자에용용',
+};
+// updateData(testId, testData);
 
 // users 데이터 반환함수
 const fetchData = async () => {
@@ -159,4 +180,14 @@ const fetchLoginUserData = async () => {
   }
 };
 
-export { addData, fetchData, addNewUser, loginExistUser, fetchLoginUserData, logOutUser, googleLoginUser, auth };
+export {
+  addData,
+  fetchData,
+  addNewUser,
+  loginExistUser,
+  fetchLoginUserData,
+  logOutUser,
+  googleLoginUser,
+  updateData,
+  auth,
+};
