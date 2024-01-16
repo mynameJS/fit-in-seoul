@@ -1,6 +1,7 @@
 import { styled } from 'styled-components';
 import { useEffect, useState } from 'react';
 import { fetchData } from '../config/firebase';
+import { useNavigate } from 'react-router-dom';
 
 const RecommendUserContainer = styled.div`
   margin-top: 10%;
@@ -24,6 +25,7 @@ export default function RecommendUsers() {
   const [usersData, setUsersData] = useState(null);
   const [loading, setLoading] = useState(false);
   const currentUserInfo = JSON.parse(localStorage.getItem('currentUser'));
+  const navigate = useNavigate();
   const filterUser = usersData?.filter(user => {
     if (currentUserInfo.userEmail === user.userEmail) return false;
     const commonInterestLen = user.interest.filter(i => currentUserInfo.interest.includes(i)).length;
@@ -57,6 +59,12 @@ export default function RecommendUsers() {
           ))}
         </UserListContainer>
       )}
+      <button
+        onClick={() => {
+          navigate('/home');
+        }}>
+        홈으로
+      </button>
     </RecommendUserContainer>
   );
 }
@@ -65,7 +73,8 @@ function UserCard({ filterUser }) {
   return (
     <div>
       <p>추천회원</p>
-      <p>{filterUser.userNickName}</p>
+      <p>닉네임 : {filterUser.userNickName}</p>
+      <p>관심사 : {filterUser.interest}</p>
     </div>
   );
 }

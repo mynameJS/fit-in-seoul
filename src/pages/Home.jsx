@@ -40,10 +40,6 @@ export default function Home() {
     navigate('/login');
   };
 
-  const handleRecommendPageClick = () => {
-    navigate('/recommend');
-  };
-
   return (
     <HomeContainer>
       <>
@@ -53,8 +49,37 @@ export default function Home() {
           <>
             <p>환영합니다!</p>
             <p>{currentUserDataInfo.userNickName}님!</p>
+            <button
+              onClick={() => {
+                navigate('/recommend');
+              }}>
+              추천회원
+            </button>
+            <button
+              onClick={() => {
+                navigate('/group');
+              }}>
+              내 운동 모임
+            </button>
+            <button
+              onClick={() => {
+                navigate('/search');
+              }}>
+              운동모임찾기
+            </button>
+            <button
+              onClick={() => {
+                navigate('/friend');
+              }}>
+              내운동친구
+            </button>
+            <button
+              onClick={() => {
+                navigate('/info');
+              }}>
+              내정보
+            </button>
             <button onClick={handleLogoutClick}>로그아웃</button>
-            <button onClick={handleRecommendPageClick}>추천회원</button>
           </>
         )}
       </>

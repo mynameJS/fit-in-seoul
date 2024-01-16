@@ -7,6 +7,10 @@ import UserBasicData from './components/RegisterForm/UserBasicData';
 import UserInterestData from './components/RegisterForm/UserInterestData';
 import UserProfileData from './components/RegisterForm/UserProfileData';
 import RecommendUsers from './pages/RecommendUsers';
+import MyWorkoutGroup from './pages/MyWorkoutGroup';
+import MyWorkoutFriend from './pages/MyWorkoutFriend';
+import FindWorkoutSearch from './pages/FindWorkoutSearch';
+import MyInfo from './pages/MyInfo';
 
 function App() {
   return (
@@ -18,6 +22,10 @@ function App() {
       <Route path="/register_interest" element={<UserInterestData />} />
       <Route path="/register_profile" element={<UserProfileData />} />
       <Route path="/recommend" element={<RecommendUsers />} />
+      <Route path="/group" element={<MyWorkoutGroup />} />
+      <Route path="/friend" element={<MyWorkoutFriend />} />
+      <Route path="/search" element={<FindWorkoutSearch />} />
+      <Route path="/info" element={<MyInfo />} />
     </Routes>
   );
 }
