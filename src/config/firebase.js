@@ -190,11 +190,13 @@ const addPostingData = async ({ writer, title, category, date, count, location, 
 const fetchPostingData = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, 'post'));
+    // console.log(querySnapshot);
     const data = [];
 
     querySnapshot.forEach(doc => {
       data.push({
         id: doc.id,
+        createTime: doc._document.createTime.timestamp.seconds,
         ...doc.data(),
       });
     });

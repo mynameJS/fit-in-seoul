@@ -4,6 +4,7 @@ import { useRecoilState } from 'recoil';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userInterestValidation } from './validation';
+import { interestList } from '../../constant/constant';
 
 const UserInterestContainer = styled.div`
   display: flex;
@@ -37,8 +38,6 @@ const InterestListContainer = styled.div`
     background-color: yellow; /* 선택된 항목의 배경색을 변경 */
   }
 `;
-
-const interestList = ['등산', '헬스', '런닝', '풋살', '탁구', '테니스'];
 
 export default function UserInterestData() {
   const navigate = useNavigate();
