@@ -170,10 +170,11 @@ const fetchLoginUserData = async () => {
 };
 
 // posting 데이터 추가 함수
-const addPostingData = async ({ writer, title, category, date, count, location, content }) => {
+const addPostingData = async ({ writer, writerNickName, title, category, date, count, location, content }) => {
   try {
     await addDoc(collection(db, 'post'), {
       writer,
+      writerNickName,
       title,
       category,
       date,

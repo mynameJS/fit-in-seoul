@@ -12,6 +12,7 @@ import MyWorkoutFriend from './pages/MyWorkoutFriend';
 import FindWorkoutSearch from './pages/FindWorkoutSearch';
 import MyInfo from './pages/MyInfo';
 import PostingForm from './pages/PostingForm';
+import PostingDetails from './pages/PostingDetails';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
       <Route path="/search" element={<FindWorkoutSearch />} />
       <Route path="/info" element={<MyInfo />} />
       <Route path="/posting" element={<PostingForm />} />
+      <Route path="/postingDetails" element={<PostingDetails />} />
     </Routes>
   );
 }

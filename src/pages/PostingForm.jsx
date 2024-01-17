@@ -31,9 +31,10 @@ const PostingFormContainer = styled.div`
 export default function PostingForm() {
   const navigate = useNavigate();
   const today = new Date().toLocaleDateString('en-CA');
-  const { id } = JSON.parse(localStorage.getItem('currentUser'));
+  const { id, userNickName } = JSON.parse(localStorage.getItem('currentUser'));
   const [formData, setFormData] = useState({
     writer: id,
+    writerNickName: userNickName,
     title: '',
     category: '',
     date: '',
@@ -50,7 +51,7 @@ export default function PostingForm() {
   const handleFormDataSubmit = async e => {
     e.preventDefault();
     const checkMissingValue = Object.values(formData).filter(value => value);
-    if (checkMissingValue.length !== 7) {
+    if (checkMissingValue.length !== 8) {
       alert('모든 항목을 입력해야 합니다.');
       return;
     }

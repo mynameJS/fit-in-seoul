@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { fetchPostingData } from '../config/firebase';
 import { useState, useEffect } from 'react';
 import { location, interestList } from '../constant/constant';
@@ -46,7 +46,7 @@ export default function FindWorkoutSearch() {
     }
   });
 
-  const itemsPerPage = 2;
+  const itemsPerPage = 3;
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -146,11 +146,13 @@ export default function FindWorkoutSearch() {
 function PostingCard({ data }) {
   return (
     <div>
-      <p>{data.title}</p>
-      <p>모집 종목 : {data.category}</p>
-      <p>일시 : {data.date}</p>
-      <p>모집인원 : {data.count}명</p>
-      <p>위치 : 서울시 {data.location}</p>
+      <Link to={'/postingDetails'} state={{ selectedCard: data }}>
+        <p>{data.title}</p>
+        <p>모집 종목 : {data.category}</p>
+        <p>일시 : {data.date}</p>
+        <p>모집인원 : {data.count}명</p>
+        <p>위치 : 서울시 {data.location}</p>
+      </Link>
     </div>
   );
 }
