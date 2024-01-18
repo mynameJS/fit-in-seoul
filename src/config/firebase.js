@@ -209,6 +209,17 @@ const fetchPostingData = async () => {
   }
 };
 
+// posting 정보 업데이트
+const updatePostingData = async (docId, newData) => {
+  try {
+    const userRef = doc(db, 'post', docId);
+    await updateDoc(userRef, newData);
+    console.log('Document updated successfully!');
+  } catch (e) {
+    console.error('Error updating document: ', e);
+  }
+};
+
 export {
   addData,
   fetchData,
@@ -220,5 +231,6 @@ export {
   updateData,
   addPostingData,
   fetchPostingData,
+  updatePostingData,
   auth,
 };

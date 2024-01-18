@@ -13,6 +13,7 @@ import FindWorkoutSearch from './pages/FindWorkoutSearch';
 import MyInfo from './pages/MyInfo';
 import PostingForm from './pages/PostingForm';
 import PostingDetails from './pages/PostingDetails';
+import PostingEdit from './pages/PostingEdit';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
       <Route path="/info" element={<MyInfo />} />
       <Route path="/posting" element={<PostingForm />} />
       <Route path="/postingDetails" element={<PostingDetails />} />
+      <Route path="/postingEdit" element={<PostingEdit />} />
     </Routes>
   );
 }

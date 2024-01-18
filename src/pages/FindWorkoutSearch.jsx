@@ -139,6 +139,12 @@ export default function FindWorkoutSearch() {
           </button>
         </div>
       )}
+      <button
+        onClick={() => {
+          navigate('/home');
+        }}>
+        홈으로
+      </button>
     </FindWorkoutSearchContainer>
   );
 }
