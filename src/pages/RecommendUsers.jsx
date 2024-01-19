@@ -22,15 +22,14 @@ const UserListContainer = styled.div`
 `;
 
 export default function RecommendUsers() {
-  const [usersData, setUsersData] = useState(null);
+  const [usersData, setUsersData] = useState([]);
   const [loading, setLoading] = useState(false);
   const currentUserInfo = JSON.parse(localStorage.getItem('currentUser'));
   const navigate = useNavigate();
-  const filterUser = usersData?.filter(user => {
+  const filterUser = usersData.filter(user => {
     if (currentUserInfo.userEmail === user.userEmail) return false;
     const commonInterestLen = user.interest.filter(i => currentUserInfo.interest.includes(i)).length;
-    // 공통 관심사가 3개이상이면 추천리스트에 뜨게하자
-    if (commonInterestLen > 2) return true;
+    if (commonInterestLen > 0) return true;
     return false;
   });
 

@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { deletePostingData } from '../config/firebase';
 
 export default function PostingDetails() {
   const navigate = useNavigate();
@@ -7,6 +8,16 @@ export default function PostingDetails() {
   const { selectedCard } = location.state;
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   const isWriter = selectedCard.writer === currentUser.id;
+
+  console.log(selectedCard);
+  const deletePostingHandler = async () => {
+    const result = confirm('정말 삭제하시겠습니까?');
+    if (result) {
+      await deletePostingData(selectedCard.id);
+      alert('삭제가 완료되었습니다.');
+      navigate('/search');
+    }
+  };
 
   return (
     <div>
@@ -23,9 +34,12 @@ export default function PostingDetails() {
           <div>사진</div>
           <p>닉네임 : {selectedCard.writerNickName ? selectedCard.writerNickName : '이전데이터'}</p>
           {isWriter ? (
-            <Link to={'/postingEdit'} state={{ editCard: selectedCard }}>
-              <button>수정하기</button>
-            </Link>
+            <>
+              <Link to={'/postingEdit'} state={{ editCard: selectedCard }}>
+                <button>수정하기</button>
+              </Link>
+              <button onClick={deletePostingHandler}>삭제하기</button>
+            </>
           ) : (
             <button>친구추가</button>
           )}

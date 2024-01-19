@@ -7,7 +7,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from 'firebase/auth';
-import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -220,6 +220,17 @@ const updatePostingData = async (docId, newData) => {
   }
 };
 
+// posting 데이터 삭제
+const deletePostingData = async docId => {
+  try {
+    const postRef = doc(db, 'post', docId);
+    await deleteDoc(postRef);
+    console.log('Document deleted successfully!');
+  } catch (e) {
+    console.error('Error deleting document: ', e);
+  }
+};
+
 export {
   addData,
   fetchData,
@@ -232,5 +243,6 @@ export {
   addPostingData,
   fetchPostingData,
   updatePostingData,
+  deletePostingData,
   auth,
 };
