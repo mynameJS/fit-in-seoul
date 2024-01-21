@@ -152,7 +152,7 @@ export default function FindWorkoutSearch() {
 function PostingCard({ data }) {
   return (
     <div>
-      <Link to={'/postingDetails'} state={{ selectedCard: data }}>
+      <Link to={'/postingDetails'} state={{ selectedPostingId: data.id }}>
         <p>{data.title}</p>
         <p>모집 종목 : {data.category}</p>
         <p>일시 : {data.date}</p>
