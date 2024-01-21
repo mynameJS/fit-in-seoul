@@ -10,7 +10,7 @@ export default function PostingDetails() {
   const [selectedPostingData, setSelectedPostingData] = useState({});
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   const isWriter = selectedPostingData?.writer === currentUser.id;
-  const [isFriend, setIsFriend] = useState(currentUser.userFriend?.includes(selectedPostingData.writer));
+  const [isFriend, setIsFriend] = useState(false);
   const [applicantList, setApplicantList] = useState([]);
   const isClosed = applicantList.length === selectedPostingData.count;
   const isApplyUser = applicantList.includes(currentUser.id) || isWriter;
@@ -18,8 +18,7 @@ export default function PostingDetails() {
   const [commentList, setCommentList] = useState([]);
 
   console.log(selectedPostingData);
-  console.log(applicantList);
-  console.log(commentList);
+  console.log(isFriend);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,6 +41,10 @@ export default function PostingDetails() {
   useEffect(() => {
     setApplicantList(selectedPostingData.applicantList ?? []);
   }, [selectedPostingData]);
+
+  useEffect(() => {
+    setIsFriend(currentUser.userFriend?.includes(selectedPostingData.writer));
+  }, [currentUser.userFriend, selectedPostingData.writer]);
 
   const deletePostingHandler = async () => {
     const result = confirm('정말 삭제하시겠습니까?');
@@ -180,7 +183,7 @@ export default function PostingDetails() {
               <div key={i}>
                 <p>작성자 : {data.commentNickName}</p>
                 <p>댓글내용 : {data.commentContent}</p>
-                <p>작성시간 : 타임스탬프 변환방법 찾아보자</p>
+                <p>작성시간 : 타임스탬프 변환방법 찾아보자ㅂ</p>
               </div>
             ))}
           </div>
