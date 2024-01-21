@@ -38,7 +38,7 @@ export default function PostingForm() {
     title: '',
     category: '',
     date: '',
-    count: 1,
+    count: 0,
     location: '',
     content: '',
   });

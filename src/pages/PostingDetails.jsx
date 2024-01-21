@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { deletePostingData, updateData } from '../config/firebase';
+import { deletePostingData, updateData, updatePostingData } from '../config/firebase';
 import { useState } from 'react';
 
 export default function PostingDetails() {
@@ -10,10 +10,10 @@ export default function PostingDetails() {
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   const isWriter = selectedCard.writer === currentUser.id;
   const [isFriend, setIsFriend] = useState(currentUser.userFriend?.includes(selectedCard.writer));
-  console.log(isFriend);
-
+  const [applicantList, setApplicantList] = useState(selectedCard.applicantList ?? []);
+  const isClosed = applicantList.length === selectedCard.count;
   console.log(selectedCard);
-
+  console.log(applicantList);
   const deletePostingHandler = async () => {
     const result = confirm('정말 삭제하시겠습니까?');
     if (result) {
@@ -54,6 +54,30 @@ export default function PostingDetails() {
     }
   };
 
+  const addWorkoutGroupHandler = async () => {
+    const newApplicant = [...applicantList, currentUser.id];
+    const currentApplyPosting = currentUser.applyPosting ?? [];
+    const newApplyPosting = [...currentApplyPosting, selectedCard.id];
+    const newPostingData = {
+      ...selectedCard,
+      applicantList: newApplicant,
+    };
+    const newUserData = {
+      ...currentUser,
+      userApplyPosting: newApplyPosting,
+    };
+    const result = confirm('해당 운동 모임에 신청하시겠습니까?');
+    if (result) {
+      alert('신청이 완료되었습니다!');
+      // 유저 정보에 신청 포스팅 아이디 넣기
+      await updateData(currentUser.id, newUserData);
+      // 포스팅 데이터에 신청 유저 데이터 넣기
+      await updatePostingData(selectedCard.id, newPostingData);
+      localStorage.setItem('currentUser', JSON.stringify(newUserData));
+      setApplicantList(newApplicant);
+    }
+  };
+
   return (
     <div>
       <p>신청한 운동 모임 상세 페이지</p>
@@ -85,7 +109,16 @@ export default function PostingDetails() {
       <div>
         <p>{selectedCard.content}</p>
       </div>
-      <button>신청하기</button>
+      <div>
+        <p>
+          현재 모집 인원 {applicantList.length} / {selectedCard.count}
+        </p>
+        {!isWriter && (
+          <button onClick={addWorkoutGroupHandler} disabled={isClosed}>
+            {isClosed ? `신청마감` : `신청하기`}
+          </button>
+        )}
+      </div>
       <div>댓글기능예정</div>
       <button
         onClick={() => {
