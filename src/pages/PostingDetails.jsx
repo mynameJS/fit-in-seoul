@@ -16,6 +16,8 @@ export default function PostingDetails() {
   const isApplyUser = applicantList.includes(currentUser.id) || isWriter;
   const [comment, setComment] = useState('');
   const [commentList, setCommentList] = useState([]);
+  const [commentEditStates, setCommentEditStates] = useState({});
+  const [editContent, setEditContent] = useState('');
 
   console.log(selectedPostingData);
   console.log(isFriend);
@@ -134,6 +136,39 @@ export default function PostingDetails() {
     setComment('');
   };
 
+  const editCommentContentHandler = async commentId => {
+    try {
+      const updatedCommentList = commentList.map(comment => {
+        if (comment.commentTime.seconds === commentId) {
+          return {
+            ...comment,
+            commentContent: editContent,
+          };
+        }
+        return comment;
+      });
+
+      await updatePostingData(selectedPostingData.id, { postingComment: updatedCommentList });
+      setCommentList(updatedCommentList);
+      setCommentEditStates({});
+    } catch (error) {
+      console.error('Error updating comment content:', error);
+    }
+  };
+
+  const deleteCommentHandler = async commentId => {
+    try {
+      const updatedCommentList = commentList.filter(comment => comment.commentTime.seconds !== commentId);
+
+      await updatePostingData(selectedPostingData.id, { postingComment: updatedCommentList });
+
+      setCommentList(updatedCommentList);
+      setCommentEditStates({}); // 삭제 시 모든 댓글의 수정 모드 상태 초기화
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
+  };
+
   return (
     <div>
       <p>신청한 운동 모임 상세 페이지</p>
@@ -179,13 +214,41 @@ export default function PostingDetails() {
         <div>
           <p>댓글</p>
           <div>
-            {commentList.map((data, i) => (
-              <div key={i}>
-                <p>작성자 : {data.commentNickName}</p>
-                <p>댓글내용 : {data.commentContent}</p>
-                <p>작성시간 : 타임스탬프 변환방법 찾아보자ㅂ</p>
-              </div>
-            ))}
+            {commentList.map(data => {
+              const date = new Date(data.commentTime.seconds * 1000 + data.commentTime.nanoseconds / 1000000);
+              const isEdit = currentUser.id === data.commentWriter;
+              return (
+                <div key={data.commentTime.seconds}>
+                  <p>작성자 : {data.commentNickName}</p>
+                  {!commentEditStates[data.commentTime.seconds] && <p>댓글내용 : {data.commentContent}</p>}
+                  {commentEditStates[data.commentTime.seconds] && (
+                    <div>
+                      <input
+                        type="text"
+                        value={editContent}
+                        onChange={e => {
+                          setEditContent(e.target.value);
+                        }}
+                      />
+                      <button onClick={() => editCommentContentHandler(data.commentTime.seconds)}>확인</button>
+                      <button onClick={() => setCommentEditStates({})}>취소</button>
+                    </div>
+                  )}
+                  <p>작성시간 :{date.toLocaleString()}</p>
+                  {isEdit && (
+                    <div>
+                      <button
+                        onClick={() => {
+                          setCommentEditStates({ [data.commentTime.seconds]: true });
+                        }}>
+                        수정
+                      </button>
+                      <button onClick={() => deleteCommentHandler(data.commentTime.seconds)}>삭제</button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
           <form onSubmit={addCommentHandler}>
             <label>
