@@ -1,26 +1,6 @@
-import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { updateData } from '../config/firebase';
-
-const MyInfoContainer = styled.div`
-  width: 50rem;
-  height: 30rem;
-  border: 1px solid black;
-  margin: 5% auto;
-  padding: 2rem;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-
-  .MyInfo {
-    display: flex;
-    width: 100%;
-    justify-content: space-around;
-  }
-`;
 
 export default function MyInfo() {
   const navigate = useNavigate();
@@ -42,45 +22,62 @@ export default function MyInfo() {
 
   console.log(myInfo);
   return (
-    <MyInfoContainer>
-      <div>{myInfo.userNickName}님의 정보</div>
-      <div className="MyInfo">
-        <div>
-          <img
-            src={myInfo.gender === 'male' ? '/male.svg' : '/female.svg'}
-            alt={myInfo.gender === 'male' ? 'Male Icon' : 'Female Icon'}
-          />
-        </div>
-        <div>
-          {isEdit && (
-            <div>
-              <input
-                value={editValue}
-                onChange={e => {
-                  setEditValue(e.target.value);
-                }}
-              />
-              <button onClick={editIntroduceHandler}>수정하기</button>
-            </div>
-          )}
-          {!isEdit && <p>{myInfo.userIntroduce}</p>}
-        </div>
-      </div>
+    <div className="bg-sky-100 h-screen text-slate-500 font-bold flex flex-col items-center gap-3">
       <div>
-        <button
-          onClick={() => {
-            setIsEdit(!isEdit);
-          }}>
-          프로필 편집
-        </button>
-        <button>내가 쓴 글 보기</button>
-        <button
-          onClick={() => {
-            navigate('/home');
-          }}>
-          홈으로
-        </button>
+        <p className="text-2xl mt-5 text-slate-600">{myInfo.userNickName}님의 정보</p>
       </div>
-    </MyInfoContainer>
+      <div className="w-1/3 h-2/3 bg-sky-50 rounded-lg flex flex-col border-double border-4 border-sky-400">
+        <div className="flex">
+          <div className="avatar p-8">
+            <div className="w-32 rounded-full">
+              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+            </div>
+          </div>
+          <div className="text-sm flex flex-col justify-center gap-2">
+            <p>성별 : {myInfo.gender === 'male' ? '남성' : '여성'}</p>
+            <p>관심사 : {myInfo.interest.map(int => `${int} `)}</p>
+            <p>사는 곳 : {myInfo.residence}</p>
+          </div>
+        </div>
+        <div>
+          <div className="text-sm flex flex-col items-center">
+            <p>자기소개</p>
+            {isEdit && (
+              <div className="flex flex-col gap-3 items-center">
+                <textarea
+                  className="textarea textarea-bordered"
+                  value={editValue}
+                  onChange={e => {
+                    setEditValue(e.target.value);
+                  }}
+                />
+                <button className="btn btn-outline btn-xs" onClick={editIntroduceHandler}>
+                  수정하기
+                </button>
+              </div>
+            )}
+            {!isEdit && (
+              <div>
+                <p>{myInfo.userIntroduce}</p>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="flex text-sm gap-5 justify-center mt-20">
+          <button
+            onClick={() => {
+              setIsEdit(!isEdit);
+            }}>
+            프로필 편집
+          </button>
+          <button
+            onClick={() => {
+              navigate('/home');
+            }}>
+            홈으로
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
