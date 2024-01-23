@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchLoginUserData } from '../config/firebase';
 import { logOutUser } from '../config/firebase';
-import Footer from '../components/RegisterForm/Layout/footer';
-import Carousel from '../components/RegisterForm/Layout/carousel';
+import Footer from '../components/Layout/footer';
+import Carousel from '../components/Layout/carousel';
+import Spinner from '../components/Spinner';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -15,7 +16,6 @@ export default function Home() {
       try {
         const currentLoginUserInfo = await fetchLoginUserData();
         const { userPassword, ...needUserData } = currentLoginUserInfo;
-        // 필요한 유저 정보만 로컬스토리지에 저장
         localStorage.setItem('currentUser', JSON.stringify(needUserData));
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -26,7 +26,7 @@ export default function Home() {
 
     fetchData();
   }, []);
-  console.log(currentUserDataInfo);
+
   const handleLogoutClick = async () => {
     const result = confirm('정말 로그아웃 하시겠습니까?');
     if (result) {
@@ -39,12 +39,12 @@ export default function Home() {
   return (
     <div className="bg-sky-100 h-screen text-slate-500 font-bold flex  justify-center">
       {loading ? (
-        <span className="loading loading-spinner loading-lg"></span>
+        <Spinner />
       ) : (
         <div className="w-3/4 flex flex-col justify-between">
           <div className="navbar flex justify-between bg-sky-50">
             <div>
-              <a className="btn btn-ghost text-xl">Fit-In-Seoul</a>
+              <a className="btn btn-ghost text-slate-800 text-xl">Fit-In-Seoul</a>
             </div>
             <ul className="flex gap-10">
               <li className="btn btn-ghost">
