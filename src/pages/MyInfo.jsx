@@ -40,7 +40,7 @@ export default function MyInfo() {
           </div>
         </div>
         <div>
-          <div className="text-sm flex flex-col items-center">
+          <div className="text-sm flex flex-col items-center gap-2">
             <p>자기소개</p>
             {isEdit && (
               <div className="flex flex-col gap-3 items-center">

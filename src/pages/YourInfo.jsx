@@ -1,20 +1,6 @@
-import { styled } from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { updateData } from '../config/firebase';
 import { useState } from 'react';
-
-const YourInfoContainer = styled.div`
-  margin: 20% 0;
-  padding: 3rem;
-  width: 50rem;
-  height: auto;
-  border: 1px solid black;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-`;
 
 export default function YourInfo() {
   const location = useLocation();
@@ -56,23 +42,61 @@ export default function YourInfo() {
   };
 
   return (
-    <YourInfoContainer>
-      <div>{selectedUserData.userNickName}님의 정보</div>
-      <div>자기소개 : {selectedUserData.userIntroduce}</div>
+    <div className="bg-sky-100 h-screen text-slate-500 font-bold flex flex-col items-center gap-3">
       <div>
-        {isFriend ? (
-          <button onClick={deleteFriendHandler}>친구삭제</button>
-        ) : (
-          <button onClick={addFriendHandler}>친구추가</button>
-        )}
-        <button>{selectedUserData.userNickName}님이 쓴 글 보기</button>
+        <p className="text-2xl mt-5 text-slate-600">{selectedUserData.userNickName}님의 정보</p>
       </div>
-      <button
-        onClick={() => {
-          navigate('/friend');
-        }}>
-        친구목록
-      </button>
-    </YourInfoContainer>
+      <div className="w-1/3 h-2/3 bg-sky-50 rounded-lg flex flex-col border-double border-4 border-sky-400">
+        <div className="flex">
+          <div className="avatar pt-8 pl-8 pr-8 pb-3">
+            <div className="w-32 rounded-full">
+              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+            </div>
+          </div>
+          <div className="text-sm flex flex-col justify-center gap-2">
+            <p>성별 : {selectedUserData.gender === 'male' ? '남성' : '여성'}</p>
+            <p>관심사 : {selectedUserData.interest.map(int => `${int} `)}</p>
+            <p>사는 곳 : {selectedUserData.residence}</p>
+          </div>
+        </div>
+        <div className="pl-16">
+          {isFriend ? (
+            <button className="btn btn-outline btn-xs" onClick={deleteFriendHandler}>
+              친구삭제
+            </button>
+          ) : (
+            <button className="btn btn-outline btn-xs" onClick={addFriendHandler}>
+              친구추가
+            </button>
+          )}
+        </div>
+        <div className="text-sm flex flex-col items-center gap-2">
+          <p>자기소개</p>
+          <div>
+            <p className="font-semibold text-sm">{selectedUserData.userIntroduce}</p>
+          </div>
+        </div>
+        <div className="flex text-sm gap-5 justify-center mt-20">
+          <button
+            onClick={() => {
+              navigate('/friend');
+            }}>
+            내 친구 리스트
+          </button>
+          <button
+            onClick={() => {
+              navigate('/recommend');
+            }}>
+            추천친구 리스트
+          </button>
+          <button
+            onClick={() => {
+              navigate('/home');
+            }}>
+            홈으로
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
