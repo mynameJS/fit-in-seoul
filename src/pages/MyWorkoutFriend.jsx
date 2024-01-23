@@ -1,21 +1,9 @@
-import { styled } from 'styled-components';
 import { useState, useEffect } from 'react';
 import { fetchData } from '../config/firebase';
-import { useNavigate, Link } from 'react-router-dom';
-
-const MyWorkoutFriendContainer = styled.div`
-  margin: 20% 0;
-  padding: 3rem;
-  width: 50rem;
-  height: auto;
-  border: 1px solid black;
-
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  align-items: center;
-`;
+import { useNavigate } from 'react-router-dom';
+import Spinner from '../components/Spinner';
+import UserCard from '../components/UserCard';
+import TableList from '../components/TableList';
 
 export default function MyWorkoutFriend() {
   const navigate = useNavigate();
@@ -37,28 +25,34 @@ export default function MyWorkoutFriend() {
     };
     getFollowData();
   }, []);
+
   return (
-    <MyWorkoutFriendContainer>
-      <p>내 운동 친구</p>
-      <div>
-        {loading ? (
-          <p>loading...</p>
-        ) : (
-          followList.map(data => (
-            <Link key={data.id} to={'/yourInfo'} state={{ selectedUser: data }}>
-              <div>
-                <p>닉네임 : {data.userNickName}</p>
-              </div>
-            </Link>
-          ))
-        )}
-      </div>
-      <button
-        onClick={() => {
-          navigate('/home');
-        }}>
-        홈으로
-      </button>
-    </MyWorkoutFriendContainer>
+    <div className="bg-sky-100 h-screen text-slate-500 font-bold flex flex-col items-center">
+      {loading ? (
+        <div className="flex h-screen items-center justify-center">
+          <Spinner />
+        </div>
+      ) : (
+        <div className="w-3/4 h-screen bg-sky-50 flex flex-col gap-10 ">
+          <div className="flex flex-col items-center">
+            <p className="text-3xl text-slate-600 mt-5">내 운동 친구</p>
+          </div>
+          <TableList>
+            {followList.map(user => (
+              <UserCard key={user.id} filterUser={user} />
+            ))}
+          </TableList>
+          <div className="flex justify-center">
+            <button
+              className="btn btn-outline btn-sm"
+              onClick={() => {
+                navigate('/home');
+              }}>
+              홈으로
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
