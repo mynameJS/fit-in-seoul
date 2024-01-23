@@ -1,8 +1,7 @@
-import { styled } from 'styled-components';
 import { useState, useEffect } from 'react';
 import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { auth } from '../../config/firebase';
 import {
   userEmailValidation,
@@ -12,12 +11,12 @@ import {
 } from './validation';
 import { location } from '../../constant/constant';
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  width: 20%;
-  margin: 5% auto;
-`;
+// const Form = styled.form`
+//   display: flex;
+//   flex-direction: column;
+//   width: 20%;
+//   margin: 5% auto;
+// `;
 
 export default function UserBasicData() {
   const navigate = useNavigate();
@@ -34,7 +33,7 @@ export default function UserBasicData() {
   });
 
   const isGoogle = auth.currentUser?.providerData[0]?.providerId === 'google.com';
-
+  console.log(formData);
   useEffect(() => {
     if (toggleIsConfirmState()) {
       setIsConfirm(true);
@@ -104,65 +103,106 @@ export default function UserBasicData() {
   };
 
   return (
-    <Form onSubmit={handleSubmit} method="post">
-      {!isGoogle && (
-        <>
-          <label htmlFor="userEmail">이메일 </label>
-          <input type="email" id="userEmail" name="userEmail" value={formData.userEmail} onChange={handleChange} />
-          <button type="button" onClick={handleCheckDuplicateIdClick}>
-            중복검사
+    <div className="bg-sky-100 h-screen text-slate-500 font-bold flex flex-col items-center pt-10  gap-10">
+      <p className="text-4xl">회원가입</p>
+      <form className="flex flex-col gap-1" onSubmit={handleSubmit}>
+        {!isGoogle && (
+          <>
+            <label htmlFor="userEmail">E-mail </label>
+            <input
+              className="input input-bordered  w-full max-w-xs"
+              type="email"
+              id="userEmail"
+              name="userEmail"
+              value={formData.userEmail}
+              onChange={handleChange}
+            />
+            <button className="mt-2 mb-2" type="button" onClick={handleCheckDuplicateIdClick}>
+              E-mail 중복검사
+            </button>
+            <label htmlFor="userPassword">Password </label>
+            <input
+              className="input input-bordered  w-full max-w-xs"
+              type="password"
+              id="userPassword"
+              name="userPassword"
+              value={formData.userPassword}
+              onChange={handleChange}
+            />
+            <label className="mt-2" htmlFor="userPasswordValid">
+              Password Verification
+            </label>
+            <input
+              className="input input-bordered  w-full max-w-xs"
+              type="password"
+              id="userPasswordValid"
+              name="userPasswordValid"
+              value={formData.userPasswordValid}
+              onChange={handleChange}
+            />
+          </>
+        )}
+        <label className="mt-2" htmlFor="userName">
+          이름{' '}
+        </label>
+        <input
+          className="input input-bordered  w-full max-w-xs"
+          type="text"
+          id="userName"
+          name="userName"
+          value={formData.userName}
+          onChange={handleChange}
+        />
+        <div className="flex items-center justify-center gap-4 mt-2">
+          <label htmlFor="male">남 </label>
+          <input
+            className="radio checked:bg-slate-500"
+            type="radio"
+            id="male"
+            name="gender"
+            value="male"
+            checked={formData.gender === 'male'}
+            onChange={handleChange}
+          />
+          <label htmlFor="female">여 </label>
+          <input
+            className="radio checked:bg-slate-500"
+            type="radio"
+            id="female"
+            name="gender"
+            value="female"
+            checked={formData.gender === 'female'}
+            onChange={handleChange}
+          />
+        </div>
+        <label className="mt-2" htmlFor="residence">
+          거주지{' '}
+        </label>
+        <select
+          className="select select-bordered w-full max-w-xs"
+          id="residence"
+          name="residence"
+          value={formData.residence}
+          onChange={handleChange}>
+          <option value="구를 선택해주세요">구를 선택해주세요</option>
+          {location.map(item => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+        <div className="flex justify-between mt-3">
+          <button className="disabled:opacity-50" type="submit" disabled={isConfirm}>
+            가입하기
           </button>
-          <label htmlFor="userPassword">비밀번호 </label>
-          <input
-            type="password"
-            id="userPassword"
-            name="userPassword"
-            value={formData.userPassword}
-            onChange={handleChange}
-          />
-          <label htmlFor="userPasswordValid">비밀번호 확인 </label>
-          <input
-            type="password"
-            id="userPasswordValid"
-            name="userPasswordValid"
-            value={formData.userPasswordValid}
-            onChange={handleChange}
-          />
-        </>
-      )}
-      <label htmlFor="userName">이름 </label>
-      <input type="text" id="userName" name="userName" value={formData.userName} onChange={handleChange} />
-      <label htmlFor="male">남 </label>
-      <input
-        type="radio"
-        id="male"
-        name="gender"
-        value="male"
-        checked={formData.gender === 'male'}
-        onChange={handleChange}
-      />
-      <label htmlFor="female">여 </label>
-      <input
-        type="radio"
-        id="female"
-        name="gender"
-        value="female"
-        checked={formData.gender === 'female'}
-        onChange={handleChange}
-      />
-      <label htmlFor="residence">거주지 </label>
-      <select id="residence" name="residence" value={formData.residence} onChange={handleChange}>
-        <option value="">구를 선택해주세요</option>
-        {location.map(item => (
-          <option key={item} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
-      <button type="submit" disabled={isConfirm}>
-        가입하기
-      </button>
-      <Link to={'/login'}>취소</Link>
-    </Form>
+          <button
+            onClick={() => {
+              navigate('/login');
+            }}>
+            가입취소
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }

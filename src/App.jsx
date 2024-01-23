@@ -2,7 +2,7 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import Landing from './pages/Landing';
 import Home from './pages/Home';
-import LoginForm from './components/LoginForm';
+import LoginForm from './pages/LoginForm';
 import UserBasicData from './components/RegisterForm/UserBasicData';
 import UserInterestData from './components/RegisterForm/UserInterestData';
 import UserProfileData from './components/RegisterForm/UserProfileData';

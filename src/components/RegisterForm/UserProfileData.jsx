@@ -1,4 +1,3 @@
-import { styled } from 'styled-components';
 import { useState } from 'react';
 import { userInputState } from '../../atom';
 import { useRecoilState } from 'recoil';
@@ -7,21 +6,21 @@ import { addData, addNewUser } from '../../config/firebase.js';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../config/firebase.js';
 
-const UserProfileContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+// const UserProfileContainer = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
 
-  margin: 30% auto;
-`;
+//   margin: 30% auto;
+// `;
 
-const UserProfileForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  width: 20%;
-  border: 1px solid black;
-  padding: 10px;
-`;
+// const UserProfileForm = styled.form`
+//   display: flex;
+//   flex-direction: column;
+//   width: 20%;
+//   border: 1px solid black;
+//   padding: 10px;
+// `;
 
 export default function UserProfileData() {
   const navigate = useNavigate();
@@ -61,21 +60,31 @@ export default function UserProfileData() {
   };
 
   return (
-    <UserProfileContainer>
-      <p>회원이 되신걸 축하합니다!</p>
-      <UserProfileForm onSubmit={handleSubmit} method="post">
-        <label htmlFor="userNickName">닉네임</label>
-        <input type="text" id="userNickName" name="userNickName" value={formData.userNick} onChange={handleChange} />
-        <label htmlFor="userIntroduce">자기소개</label>
-        <textarea
-          type="text"
-          id="userIntroduce"
-          name="userIntroduce"
-          value={formData.userIntroduce}
-          onChange={handleChange}
-        />
-        <button>확인</button>
-      </UserProfileForm>
-    </UserProfileContainer>
+    <div className="bg-sky-100 h-screen text-slate-500 font-bold">
+      <div className="flex flex-col items-center pt-20 gap-10">
+        <p className="text-2xl">회원이 되신걸 축하합니다!</p>
+        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+          <label htmlFor="userNickName">별명</label>
+          <input
+            className="input input-bordered  w-full max-w-xs"
+            type="text"
+            id="userNickName"
+            name="userNickName"
+            value={formData.userNick}
+            onChange={handleChange}
+          />
+          <label htmlFor="userIntroduce">자기소개</label>
+          <textarea
+            className="textarea textarea-bordered mb-3"
+            type="text"
+            id="userIntroduce"
+            name="userIntroduce"
+            value={formData.userIntroduce}
+            onChange={handleChange}
+          />
+          <button>확인</button>
+        </form>
+      </div>
+    </div>
   );
 }

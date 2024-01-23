@@ -1,26 +1,8 @@
-import { styled } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { loginConfirmValidation } from './RegisterForm/validation';
+import { loginConfirmValidation } from '../components/RegisterForm/validation';
 import { useNavigate } from 'react-router-dom';
 import { loginExistUser, googleLoginUser, fetchLoginUserData } from '../config/firebase';
-
-const LoginFormContainer = styled.div`
-  width: 40%;
-  border: 1px solid black;
-  padding: 10px;
-  margin: 20% auto;
-
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
-`;
-
-const LoginFormTag = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -67,26 +49,38 @@ export default function LoginForm() {
   };
 
   return (
-    <LoginFormContainer>
-      <LoginFormTag onSubmit={handleSubmit} method="post">
-        <label htmlFor="userInputEmail">이메일</label>
+    <div className="bg-sky-100 h-screen text-slate-500 font-bold flex flex-col items-center justify-center gap-7">
+      <p className="text-5xl ">Fit In Seoul</p>
+      <form className="flex flex-col gap-1" onSubmit={handleSubmit}>
+        <label className="form-control w-full max-w-xs" htmlFor="userInputEmail">
+          <div className="label">
+            <span>E-mail</span>
+          </div>
+        </label>
         <input
+          className="input input-bordered w-full max-w-xs"
           type="text"
           id="userInputEmail"
           name="userInputEmail"
           value={formData.userInputEmail}
           onChange={handleChange}
         />
-        <label htmlFor="userInputPassword">비밀번호</label>
+        <label className="form-control w-full max-w-xs" htmlFor="userInputPassword">
+          <div className="label">
+            <span>Password</span>
+          </div>
+        </label>
         <input
+          className="input input-bordered w-full max-w-xs"
           type="password"
           id="userInputPassword"
           name="userInputPassword"
           value={formData.userInputPassword}
           onChange={handleChange}
         />
+        <br />
         <button>로그인</button>
-      </LoginFormTag>
+      </form>
       <Link to={'/register_basic'}>
         <p>회원가입</p>
       </Link>
@@ -94,6 +88,6 @@ export default function LoginForm() {
       <Link to={'/'}>
         <p>홈으로</p>
       </Link>
-    </LoginFormContainer>
+    </div>
   );
 }
