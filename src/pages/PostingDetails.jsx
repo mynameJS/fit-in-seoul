@@ -20,7 +20,7 @@ export default function PostingDetails() {
   const isWriter = selectedPostingData?.writer === currentUser.id;
   const [isFriend, setIsFriend] = useState(false);
   const [applicantList, setApplicantList] = useState([]);
-  const isClosed = applicantList.length === selectedPostingData.count;
+  const isClosed = applicantList.length === Number(selectedPostingData.count);
   const isApplyUser = applicantList.includes(currentUser.id) || isWriter;
   const [comment, setComment] = useState('');
   const [commentList, setCommentList] = useState([]);
