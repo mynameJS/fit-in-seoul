@@ -5,9 +5,4 @@ const userInputState = atom({
   default: {},
 });
 
-const currentLoginUserData = atom({
-  key: 'currentLoginUser',
-  default: null,
-});
-
-export { userInputState, currentLoginUserData };
+export { userInputState };

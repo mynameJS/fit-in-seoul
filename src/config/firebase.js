@@ -112,23 +112,14 @@ const loginExistUser = async (userEmail, userPassword) => {
 const googleLoginUser = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
-
-    // This gives you a Google Access Token. You can use it to access the Google API.
     const credential = GoogleAuthProvider.credentialFromResult(result);
     const token = credential.accessToken;
-    // The signed-in user info.
     const user = result.user;
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
   } catch (error) {
-    // Handle Errors here.
     const errorCode = error.code;
     const errorMessage = error.message;
-    // The email of the user's account used.
     const email = error.customData.email;
-    // The AuthCredential type that was used.
     const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
   }
 };
 
@@ -155,7 +146,7 @@ const getLoginUser = () => {
   });
 };
 
-// getLoginUser 함수를 이용하여 로그인 유저의 이메일로 유저정보 받기 (비로그인 시 null)
+// getLoginUser 함수를 이용하여 로그인 유저의 이메일로 유저정보 받기
 const fetchLoginUserData = async () => {
   try {
     const currentLoginUserEmail = await getLoginUser();

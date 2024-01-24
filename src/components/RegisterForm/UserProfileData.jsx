@@ -6,22 +6,6 @@ import { addData, addNewUser } from '../../config/firebase.js';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../config/firebase.js';
 
-// const UserProfileContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-
-//   margin: 30% auto;
-// `;
-
-// const UserProfileForm = styled.form`
-//   display: flex;
-//   flex-direction: column;
-//   width: 20%;
-//   border: 1px solid black;
-//   padding: 10px;
-// `;
-
 export default function UserProfileData() {
   const navigate = useNavigate();
   const [userInput, setUserInput] = useRecoilState(userInputState);
@@ -44,7 +28,7 @@ export default function UserProfileData() {
     }
     setUserInput(prevUserInput => {
       const updatedUserInput = { ...prevUserInput, ...formData };
-      // 구글사용자 아니라면
+
       if (!isGoogle) {
         addNewUser(userInput.userEmail, userInput.userPassword);
       }

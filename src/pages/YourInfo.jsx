@@ -9,7 +9,6 @@ export default function YourInfo() {
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   const [isFriend, setIsFriend] = useState(currentUser.userFriend?.includes(selectedUserData.id));
 
-  // postingDetails에 있는 함수랑 똑같음. 나중에 리팩토링해야됨
   const addFriendHandler = async () => {
     const result = confirm(`${selectedUserData.userNickName}님을 친구 추가하시겠습니까?`);
     if (result) {

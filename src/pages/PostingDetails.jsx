@@ -59,7 +59,6 @@ export default function PostingDetails() {
     const result = confirm('정말 삭제하시겠습니까?');
     if (result) {
       await deletePostingData(selectedPostingData.id);
-      // user데이터에서 applyPosting 내역 지워주기
       const allUserData = await fetchData();
       const applyTargetPostingUserData = allUserData.filter(({ userApplyPosting }) =>
         userApplyPosting?.includes(selectedPostingData.id)
@@ -127,9 +126,7 @@ export default function PostingDetails() {
     const result = confirm('해당 운동 모임에 신청하시겠습니까?');
     if (result) {
       alert('신청이 완료되었습니다!');
-      // 유저 정보에 신청 포스팅 아이디 넣기
       await updateData(currentUser.id, newUserData);
-      // 포스팅 데이터에 신청 유저 데이터 넣기
       await updatePostingData(selectedPostingData.id, newPostingData);
       localStorage.setItem('currentUser', JSON.stringify(newUserData));
       setApplicantList(newApplicant);

@@ -5,39 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { userInterestValidation } from './validation';
 import { interestList } from '../../constant/constant';
 
-// const UserInterestContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-
-//   width: 20%;
-//   margin: 5% auto;
-//   border: 1px solid black;
-//   gap: 10px;
-
-//   p {
-//     color: red;
-//   }
-// `;
-
-// const InterestListContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   gap: 10px;
-
-//   div {
-//     border: 1px solid blue;
-//     border-radius: 50%;
-//     padding: 10px;
-//     cursor: pointer; /* 마우스를 가져다 대면 커서가 변하도록 설정 */
-//   }
-
-//   .selected {
-//     background-color: yellow; /* 선택된 항목의 배경색을 변경 */
-//   }
-// `;
-
 export default function UserInterestData() {
   const navigate = useNavigate();
   const [userInterest, setUserInterest] = useState([]);

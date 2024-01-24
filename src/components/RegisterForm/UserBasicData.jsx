@@ -11,16 +11,8 @@ import {
 } from './validation';
 import { location } from '../../constant/constant';
 
-// const Form = styled.form`
-//   display: flex;
-//   flex-direction: column;
-//   width: 20%;
-//   margin: 5% auto;
-// `;
-
 export default function UserBasicData() {
   const navigate = useNavigate();
-  // 구글 로그인 확인
   const [userInput, setUserInput] = useRecoilState(userInputState);
   const [isConfirm, setIsConfirm] = useState(true);
   const [formData, setFormData] = useState({
