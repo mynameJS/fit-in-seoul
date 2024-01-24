@@ -47,37 +47,33 @@ export default function Home() {
               <a className="btn btn-ghost text-slate-800 text-xl">Fit-In-Seoul</a>
             </div>
             <ul className="flex gap-10">
-              <li className="btn btn-ghost">
-                <button
-                  onClick={() => {
-                    navigate('/recommend');
-                  }}>
-                  추천회원
-                </button>
+              <li
+                onClick={() => {
+                  navigate('/recommend');
+                }}
+                className="btn btn-ghost">
+                추천회원
               </li>
-              <li className="btn btn-ghost">
-                <button
-                  onClick={() => {
-                    navigate('/group');
-                  }}>
-                  내 운동 모임
-                </button>
+              <li
+                onClick={() => {
+                  navigate('/group');
+                }}
+                className="btn btn-ghost">
+                내 운동 모임
               </li>
-              <li className="btn btn-ghost">
-                <button
-                  onClick={() => {
-                    navigate('/search');
-                  }}>
-                  운동모임찾기
-                </button>
+              <li
+                onClick={() => {
+                  navigate('/search');
+                }}
+                className="btn btn-ghost">
+                운동모임찾기
               </li>
-              <li className="btn btn-ghost">
-                <button
-                  onClick={() => {
-                    navigate('/friend');
-                  }}>
-                  내 운동친구
-                </button>
+              <li
+                onClick={() => {
+                  navigate('/friend');
+                }}
+                className="btn btn-ghost">
+                내 운동친구
               </li>
             </ul>
             <div className="gap-2">
