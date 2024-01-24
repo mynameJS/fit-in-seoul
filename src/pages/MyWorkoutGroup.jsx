@@ -28,7 +28,7 @@ export default function MyWorkoutGroup() {
       try {
         const postingData = await fetchPostingData();
         const filterMyPosting = postingData.filter(({ writer }) => currentUser.id === writer);
-        const filterApplyPosting = postingData.filter(({ id }) => currentUser.userApplyPosting.includes(id));
+        const filterApplyPosting = postingData.filter(({ id }) => currentUser.userApplyPosting?.includes(id));
         setMyPosting(filterMyPosting);
         setApplyPosting(filterApplyPosting);
       } catch (error) {

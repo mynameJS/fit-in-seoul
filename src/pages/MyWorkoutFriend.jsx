@@ -44,7 +44,7 @@ export default function MyWorkoutFriend() {
           </TableList>
           <div className="flex justify-center">
             <button
-              className="btn btn-outline btn-sm"
+              className="btn btn-active btn-neutral btn-sm"
               onClick={() => {
                 navigate('/home');
               }}>

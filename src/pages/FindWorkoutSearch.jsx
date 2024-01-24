@@ -1,27 +1,9 @@
-import { styled } from 'styled-components';
 import { useNavigate, Link } from 'react-router-dom';
 import { fetchPostingData } from '../config/firebase';
 import { useState, useEffect } from 'react';
 import { location, interestList } from '../constant/constant';
-
-const FindWorkoutSearchContainer = styled.div`
-  width: 50rem;
-  height: auto;
-  border: 1px solid black;
-  margin: 5% auto;
-  padding: 2rem;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-
-  .cardList {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-`;
+import Spinner from '../components/Spinner';
+import PostingTableList from '../components/PostingTableList';
 
 export default function FindWorkoutSearch() {
   const navigate = useNavigate();
@@ -46,7 +28,7 @@ export default function FindWorkoutSearch() {
     }
   });
 
-  const itemsPerPage = 3;
+  const itemsPerPage = 4;
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -90,75 +72,125 @@ export default function FindWorkoutSearch() {
   }, [filterKey]);
 
   return (
-    <FindWorkoutSearchContainer>
-      <p>운동모임찾기</p>
-      <div>
-        <button
-          onClick={() => {
-            navigate('/posting');
-          }}>
-          글쓰기
-        </button>
-      </div>
-      <div>
-        <form>
-          <label htmlFor="category">카테고리</label>
-          <select id="category" name="category" value={filterKey.category} onChange={handleChange}>
-            <option value="">운동종목을 선택해주세요</option>
-            {interestList.map(item => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-          <label htmlFor="location">지역</label>
-          <select id="location" name="location" value={filterKey.location} onChange={handleChange}>
-            <option value="">구를 선택해주세요</option>
-            {location.map(item => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-        </form>
-      </div>
-      <div className="cardList">
-        {loading ? <p>Loading...</p> : getCurrentPageData().map(data => <PostingCard key={data.id} data={data} />)}
-        {!getCurrentPageData().length && <p>일치하는 게시물이 없습니다.</p>}
-      </div>
-      {!!getCurrentPageData().length && (
-        <div>
-          <button onClick={handlePreButtonClick} disabled={currentPage === 1}>
-            pre
-          </button>
-          <span>
-            {currentPage} / {maxPage}
-          </span>
-          <button onClick={handleNextButtonClick} disabled={currentPage === maxPage}>
-            next
-          </button>
+    <div className="bg-sky-100 h-screen text-slate-500 font-bold flex flex-col items-center">
+      {loading ? (
+        <div className="flex h-screen items-center justify-center">
+          <Spinner />
+        </div>
+      ) : (
+        <div className="w-3/4 h-screen bg-sky-50 flex flex-col gap-10">
+          <div className="flex flex-col items-center">
+            <p className="text-3xl text-slate-600 mt-5">운동모임찾기</p>
+          </div>
+          <div className="flex flex-row-reverse justify-center items-center gap-20">
+            <div>
+              <button
+                className="btn btn-active btn-neutral btn-sm"
+                onClick={() => {
+                  navigate('/posting');
+                }}>
+                글쓰기
+              </button>
+            </div>
+            <div className="basis-2/3">
+              <form className="flex gap-2 justify-center">
+                <label htmlFor="category"></label>
+                <select
+                  className="select select-bordered w-full max-w-xs"
+                  id="category"
+                  name="category"
+                  value={filterKey.category}
+                  onChange={handleChange}>
+                  <option value="">운동종목을 선택해주세요</option>
+                  {interestList.map(item => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+                <label htmlFor="location"></label>
+                <select
+                  className="select select-bordered w-full max-w-xs"
+                  id="location"
+                  name="location"
+                  value={filterKey.location}
+                  onChange={handleChange}>
+                  <option value="">구를 선택해주세요</option>
+                  {location.map(item => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </form>
+            </div>
+          </div>
+          <div>
+            <PostingTableList>
+              {getCurrentPageData().map(data => (
+                <PostingCard key={data.id} data={data} />
+              ))}
+            </PostingTableList>
+            {!getCurrentPageData().length && <p className="p-5">일치하는 게시물이 없습니다.</p>}
+          </div>
+          {!!getCurrentPageData().length && (
+            <div className="flex justify-center items-center gap-2">
+              <button
+                className="btn btn-active btn-neutral btn-sm"
+                onClick={handlePreButtonClick}
+                disabled={currentPage === 1}>
+                이전
+              </button>
+              <span>
+                {currentPage} / {maxPage}
+              </span>
+              <button
+                className="btn btn-active btn-neutral btn-sm"
+                onClick={handleNextButtonClick}
+                disabled={currentPage === maxPage}>
+                다음
+              </button>
+            </div>
+          )}
+          <div className="flex justify-center">
+            <button
+              className="btn btn-active btn-neutral btn-sm"
+              onClick={() => {
+                navigate('/home');
+              }}>
+              홈으로
+            </button>
+          </div>
         </div>
       )}
-      <button
-        onClick={() => {
-          navigate('/home');
-        }}>
-        홈으로
-      </button>
-    </FindWorkoutSearchContainer>
+    </div>
   );
 }
 
 function PostingCard({ data }) {
   return (
-    <div>
-      <Link to={'/postingDetails'} state={{ selectedPostingId: data.id }}>
-        <p>{data.title}</p>
-        <p>모집 종목 : {data.category}</p>
-        <p>일시 : {data.date}</p>
-        <p>모집인원 : {data.count}명</p>
-        <p>위치 : 서울시 {data.location}</p>
-      </Link>
-    </div>
+    <tr>
+      <td>
+        <div className="flex items-center gap-3">
+          <div className="avatar">
+            <div className="mask mask-squircle w-12 h-12">
+              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="userAvatar" />
+            </div>
+          </div>
+          <div>
+            <div className="font-bold">{data.writerNickName}</div>
+          </div>
+        </div>
+      </td>
+      <td>{data.category}</td>
+      <td>{data.count}</td>
+      <td>{data.date}</td>
+      <td>{data.location}</td>
+      <th>
+        <Link to={'/postingDetails'} state={{ selectedPostingId: data.id }}>
+          <button className="btn btn-ghost btn-xs">상세정보</button>
+        </Link>
+      </th>
+    </tr>
   );
 }

@@ -61,11 +61,11 @@ export default function YourInfo() {
         </div>
         <div className="pl-16">
           {isFriend ? (
-            <button className="btn btn-outline btn-xs" onClick={deleteFriendHandler}>
+            <button className="btn btn-active btn-neutral btn-xs" onClick={deleteFriendHandler}>
               친구삭제
             </button>
           ) : (
-            <button className="btn btn-outline btn-xs" onClick={addFriendHandler}>
+            <button className="btn btn-active btn-neutral btn-xs" onClick={addFriendHandler}>
               친구추가
             </button>
           )}

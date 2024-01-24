@@ -39,7 +39,7 @@ export default function RecommendUsers() {
           <Spinner />
         </div>
       ) : (
-        <div className="w-3/4 h-screen bg-sky-50 flex flex-col gap-10 ">
+        <div className="w-3/4 h-screen bg-sky-50 flex flex-col gap-10">
           <div className="flex flex-col items-center">
             <p className="text-3xl text-slate-600 mt-5">나와 관심사가 비슷한 회원들</p>
           </div>
@@ -50,7 +50,7 @@ export default function RecommendUsers() {
           </TableList>
           <div className="flex justify-center">
             <button
-              className="btn btn-outline btn-sm"
+              className="btn btn-active btn-neutral btn-sm"
               onClick={() => {
                 navigate('/home');
               }}>
