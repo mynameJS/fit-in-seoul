@@ -6,6 +6,7 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
+  deleteUser,
 } from 'firebase/auth';
 import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc, Timestamp } from 'firebase/firestore';
 
@@ -128,6 +129,29 @@ const logOutUser = async () => {
   await auth.signOut();
 };
 
+// 회원 계정탈퇴
+const userAccountDelete = async () => {
+  const user = auth.currentUser;
+  try {
+    await deleteUser(user);
+    console.log('계정이 성공적으로 삭제되었습니다.');
+  } catch (error) {
+    console.error('Error delete account: ', error);
+  }
+};
+
+// 회원정보 삭제
+const deleteUserData = async userId => {
+  try {
+    const userDocRef = doc(db, 'users', userId);
+    console.log(userDocRef);
+    await deleteDoc(userDocRef);
+    console.log(`문서 ${userId}가 성공적으로 삭제되었습니다.`);
+  } catch (error) {
+    console.error(`문서 삭제 중 오류 발생: ${error}`);
+  }
+};
+
 // 로그인 유저 이메일 받기
 const getLoginUser = () => {
   return new Promise((resolve, reject) => {
@@ -240,5 +264,7 @@ export {
   updatePostingData,
   deletePostingData,
   getCurrentTimestamp,
+  userAccountDelete,
+  deleteUserData,
   auth,
 };

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { updateData } from '../config/firebase';
+import { updateData, userAccountDelete, deleteUserData, fetchPostingData, updatePostingData } from '../config/firebase';
 
 export default function MyInfo() {
   const navigate = useNavigate();
@@ -18,6 +18,29 @@ export default function MyInfo() {
     await updateData(userId, newData);
     localStorage.setItem('currentUser', JSON.stringify({ ...myInfo, userIntroduce: editValue }));
     setIsEdit(!isEdit);
+  };
+
+  const accountDeleteHandler = async () => {
+    const result = confirm('정말로 계정을 삭제 하시겠습니까?');
+    if (result) {
+      const allPostingData = await fetchPostingData();
+      const currentUserApplyPostingData = allPostingData.filter(({ applicantList }) =>
+        applicantList?.includes(myInfo.id)
+      );
+
+      for (const data of currentUserApplyPostingData) {
+        const newApplicantList = data.applicantList.filter(applyUserId => applyUserId !== myInfo.id);
+        const newData = {
+          ...data,
+          applicantList: newApplicantList,
+        };
+        await updatePostingData(data.id, newData);
+      }
+      await deleteUserData(myInfo.id);
+      await userAccountDelete();
+      alert('계정 삭제가 완료되었습니다! 처음 화면으로 돌아갑니다.');
+      navigate('/');
+    }
   };
 
   return (
@@ -62,7 +85,7 @@ export default function MyInfo() {
             )}
           </div>
         </div>
-        <div className="flex text-sm gap-5 justify-center mt-20">
+        <div className="flex text-sm gap-5 justify-center mt-10">
           <button
             onClick={() => {
               setIsEdit(!isEdit);
@@ -75,6 +98,9 @@ export default function MyInfo() {
             }}>
             홈으로
           </button>
+        </div>
+        <div className="flex justify-center text-sm mt-4">
+          <button onClick={accountDeleteHandler}>계정탈퇴</button>
         </div>
       </div>
     </div>
