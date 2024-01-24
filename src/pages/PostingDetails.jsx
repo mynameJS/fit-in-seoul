@@ -2,6 +2,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import {
   deletePostingData,
   updateData,
+  fetchData,
   updatePostingData,
   fetchPostingData,
   getCurrentTimestamp,
@@ -45,6 +46,7 @@ export default function PostingDetails() {
 
     fetchData();
   }, []);
+  console.log(selectedPostingData);
 
   useEffect(() => {
     setApplicantList(selectedPostingData.applicantList ?? []);
@@ -58,6 +60,19 @@ export default function PostingDetails() {
     const result = confirm('정말 삭제하시겠습니까?');
     if (result) {
       await deletePostingData(selectedPostingData.id);
+      // user데이터에서 applyPosting 내역 지워주기
+      const allUserData = await fetchData();
+      const applyTargetPostingUserData = allUserData.filter(({ userApplyPosting }) =>
+        userApplyPosting?.includes(selectedPostingData.id)
+      );
+      for (const data of applyTargetPostingUserData) {
+        const newUserApplyPosting = data.userApplyPosting.filter(postingId => postingId !== selectedPostingData.id);
+        const newData = {
+          ...data,
+          userApplyPosting: newUserApplyPosting,
+        };
+        await updateData(data.id, newData);
+      }
       alert('삭제가 완료되었습니다.');
       navigate('/search');
     }
@@ -95,6 +110,10 @@ export default function PostingDetails() {
   };
 
   const addWorkoutGroupHandler = async () => {
+    if (applicantList.includes(currentUser.id)) {
+      alert('이미 속해 있는 운동모임 입니다.');
+      return;
+    }
     const newApplicant = [...applicantList, currentUser.id];
     const currentApplyPosting = currentUser.userApplyPosting ?? [];
     const newApplyPosting = [...currentApplyPosting, selectedPostingData.id];
@@ -176,13 +195,16 @@ export default function PostingDetails() {
   };
 
   return (
-    <div className="bg-sky-100 h-full text-slate-500 font-bold flex flex-col items-center">
+    <div
+      className={`bg-sky-100 ${
+        isApplyUser ? `h-full` : `h-screen`
+      } text-slate-500 font-bold flex flex-col items-center`}>
       {loading ? (
-        <div className="flex h-screen items-center justify-center">
+        <div className="flex items-center justify-center">
           <Spinner />
         </div>
       ) : (
-        <div className="w-1/2 h-full bg-sky-50 flex flex-col gap-8">
+        <div className="w-1/2 bg-sky-50 flex flex-col gap-8">
           <div className="flex flex-col items-center">
             <p className="text-3xl text-slate-600 mt-5">운동모임 상세 페이지</p>
           </div>
