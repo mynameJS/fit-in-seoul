@@ -39,7 +39,7 @@ export default function PostingForm() {
     <div className="bg-sky-100 h-screen text-slate-500 font-bold flex flex-col items-center">
       <div className="w-3/4 h-screen bg-sky-50 flex flex-col gap-10 items-center">
         <p className="text-3xl text-slate-600 mt-5">게시글 작성</p>
-        <form onSubmit={handleFormDataSubmit} className="flex flex-col gap-3 w-1/2 ">
+        <form onSubmit={handleFormDataSubmit} className="flex flex-col gap-3 w-1/2">
           <label htmlFor="title">제목</label>
           <input
             className="rounded-lg p-3 text-sm"
