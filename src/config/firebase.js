@@ -7,7 +7,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from 'firebase/auth';
-import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc, Timestamp } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -24,6 +24,11 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 // 구글 로그인
 const provider = new GoogleAuthProvider();
+
+// 현재 시간을 Firestore Timestamp로 변환
+const getCurrentTimestamp = () => {
+  return Timestamp.now();
+};
 
 // users 정보 업데이트
 const updateData = async (docId, newData) => {
@@ -244,5 +249,6 @@ export {
   fetchPostingData,
   updatePostingData,
   deletePostingData,
+  getCurrentTimestamp,
   auth,
 };

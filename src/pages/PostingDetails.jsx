@@ -1,14 +1,20 @@
-import { styled } from 'styled-components';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { deletePostingData, updateData, updatePostingData, fetchPostingData } from '../config/firebase';
+import {
+  deletePostingData,
+  updateData,
+  updatePostingData,
+  fetchPostingData,
+  getCurrentTimestamp,
+} from '../config/firebase';
 import { useState, useEffect } from 'react';
+import Spinner from '../components/Spinner';
 
 export default function PostingDetails() {
   const navigate = useNavigate();
   const location = useLocation();
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   const { selectedPostingId } = location.state;
   const [selectedPostingData, setSelectedPostingData] = useState({});
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   const isWriter = selectedPostingData?.writer === currentUser.id;
   const [isFriend, setIsFriend] = useState(false);
   const [applicantList, setApplicantList] = useState([]);
@@ -19,17 +25,13 @@ export default function PostingDetails() {
   const [commentEditStates, setCommentEditStates] = useState({});
   const [editContent, setEditContent] = useState('');
 
-  console.log(selectedPostingData);
-  console.log(isFriend);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const postingData = await fetchPostingData();
         const filterData = postingData.filter(({ id }) => id === selectedPostingId);
-        console.log(filterData);
         setSelectedPostingData(...filterData);
         setApplicantList(selectedPostingData.applicantList ?? []);
-
         const prePostingComment = filterData[0].postingComment ?? [];
         setCommentList(prePostingComment);
       } catch (error) {
@@ -91,7 +93,6 @@ export default function PostingDetails() {
   const addWorkoutGroupHandler = async () => {
     const newApplicant = [...applicantList, currentUser.id];
     const currentApplyPosting = currentUser.userApplyPosting ?? [];
-    console.log(currentApplyPosting);
     const newApplyPosting = [...currentApplyPosting, selectedPostingData.id];
     const newPostingData = {
       ...selectedPostingData,
@@ -113,13 +114,13 @@ export default function PostingDetails() {
     }
   };
 
+  console.log(commentList);
   const addCommentHandler = async e => {
     e.preventDefault();
     const newComment = comment;
-    const prePostingComment = selectedPostingData.postingComment || [];
     const currentTime = new Date();
+    const preCommentList = [...commentList];
     const updatePostingComment = [
-      ...prePostingComment,
       {
         commentWriter: currentUser.id,
         commentNickName: currentUser.userNickName,
@@ -129,11 +130,29 @@ export default function PostingDetails() {
     ];
     const newPostingData = {
       ...selectedPostingData,
-      postingComment: updatePostingComment,
+      postingComment: [...preCommentList, ...updatePostingComment],
     };
     await updatePostingData(selectedPostingData.id, newPostingData);
-    setCommentList(updatePostingComment);
+    setCommentList(prevCommentList => [...prevCommentList, ...updatePostingComment]);
+    console.log('최신댓글리스트상태값', commentList);
     setComment('');
+  };
+
+  const deleteCommentHandler = async commentId => {
+    console.log(commentId);
+    try {
+      const result = confirm('정말 삭제 하시겠습니까?');
+      if (result) {
+        const updatedCommentList = commentList.filter(comment => comment.commentTime.seconds !== commentId);
+        console.log('삭제당시리스트', commentList);
+        console.log('댓글삭제된최신리스트', updatedCommentList);
+        await updatePostingData(selectedPostingData.id, { postingComment: updatedCommentList });
+        setCommentList(updatedCommentList);
+        setCommentEditStates({});
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
   };
 
   const editCommentContentHandler = async commentId => {
@@ -156,120 +175,121 @@ export default function PostingDetails() {
     }
   };
 
-  const deleteCommentHandler = async commentId => {
-    try {
-      const updatedCommentList = commentList.filter(comment => comment.commentTime.seconds !== commentId);
-
-      await updatePostingData(selectedPostingData.id, { postingComment: updatedCommentList });
-
-      setCommentList(updatedCommentList);
-      setCommentEditStates({}); // 삭제 시 모든 댓글의 수정 모드 상태 초기화
-    } catch (error) {
-      console.error('Error deleting comment:', error);
-    }
-  };
-
   return (
-    <div>
-      <p>신청한 운동 모임 상세 페이지</p>
-      <div>
-        <div>
-          <p>제목 : {selectedPostingData.title}</p>
-          <p>날짜 : {selectedPostingData.date}</p>
-          <p>카테고리 : {selectedPostingData.category}</p>
-          <p>모집인원 : {selectedPostingData.count}</p>
-          <p>위치 : {selectedPostingData.location}</p>
+    <div className="bg-sky-100 h-screen text-slate-500 font-bold flex flex-col items-center">
+      <div className="w-1/2 h-screen bg-sky-50 flex flex-col gap-8">
+        <div className="flex flex-col items-center">
+          <p className="text-3xl text-slate-600 mt-5">운동모임 상세 페이지</p>
         </div>
-        <div>
-          <div>사진</div>
-          <p>닉네임 : {selectedPostingData.writerNickName ? selectedPostingData.writerNickName : '이전데이터'}</p>
-          {isWriter ? (
-            <>
-              <Link to={'/postingEdit'} state={{ editCard: selectedPostingData }}>
-                <button>수정하기</button>
-              </Link>
-              <button onClick={deletePostingHandler}>삭제하기</button>
-            </>
-          ) : isFriend ? (
-            <button onClick={deleteFriendHandler}>친구삭제</button>
-          ) : (
-            <button onClick={addFriendHandler}>친구추가</button>
+        <div className="flex justify-evenly">
+          <div className="flex flex-col gap-2 mt-5 gap-3">
+            <p>제목 : {selectedPostingData.title}</p>
+            <p>날짜 : {selectedPostingData.date}</p>
+            <p>모집운동 : {selectedPostingData.category}</p>
+            <p>모집인원 : {selectedPostingData.count}</p>
+            <p>위치 : {selectedPostingData.location}</p>
+          </div>
+          <div className="flex flex-col gap-2 items-center">
+            <div className="avatar">
+              <div className="w-32 rounded-full">
+                <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+              </div>
+            </div>
+            <p>{selectedPostingData.writerNickName ? selectedPostingData.writerNickName : '이전데이터'}</p>
+            {isWriter ? (
+              <div className="flex gap-2">
+                <Link to={'/postingEdit'} state={{ editCard: selectedPostingData }}>
+                  <button className="btn btn-active btn-neutral btn-sm">수정하기</button>
+                </Link>
+                <button className="btn btn-active btn-neutral btn-sm" onClick={deletePostingHandler}>
+                  삭제하기
+                </button>
+              </div>
+            ) : isFriend ? (
+              <button className="btn btn-active btn-neutral btn-sm" onClick={deleteFriendHandler}>
+                친구삭제
+              </button>
+            ) : (
+              <button className="btn btn-active btn-neutral btn-sm" onClick={addFriendHandler}>
+                친구추가
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="flex justify-center border-solid border-4 border-sky-200 p-8 ml-3 mr-3 bg-white font-medium">
+          <p>{selectedPostingData.content}</p>
+        </div>
+        <div className="flex ml-3 gap-2 items-center">
+          <p>
+            현재 모집 인원 {applicantList.length} / {selectedPostingData.count}
+          </p>
+          {!isWriter && (
+            <button className="btn btn-active btn-neutral btn-sm" onClick={addWorkoutGroupHandler} disabled={isClosed}>
+              {isClosed ? `신청마감` : `신청하기`}
+            </button>
           )}
         </div>
-      </div>
-      <div>
-        <p>{selectedPostingData.content}</p>
-      </div>
-      <div>
-        <p>
-          현재 모집 인원 {applicantList.length} / {selectedPostingData.count}
-        </p>
-        {!isWriter && (
-          <button onClick={addWorkoutGroupHandler} disabled={isClosed}>
-            {isClosed ? `신청마감` : `신청하기`}
-          </button>
-        )}
-      </div>
-      {isApplyUser && (
-        <div>
-          <p>댓글</p>
-          <div>
-            {commentList.map(data => {
-              const date = new Date(data.commentTime.seconds * 1000 + data.commentTime.nanoseconds / 1000000);
-              const isEdit = currentUser.id === data.commentWriter;
-              return (
-                <div key={data.commentTime.seconds}>
-                  <p>작성자 : {data.commentNickName}</p>
-                  {!commentEditStates[data.commentTime.seconds] && <p>댓글내용 : {data.commentContent}</p>}
-                  {commentEditStates[data.commentTime.seconds] && (
-                    <div>
-                      <input
-                        type="text"
-                        value={editContent}
-                        onChange={e => {
-                          setEditContent(e.target.value);
-                        }}
-                      />
-                      <button onClick={() => editCommentContentHandler(data.commentTime.seconds)}>확인</button>
-                      <button onClick={() => setCommentEditStates({})}>취소</button>
-                    </div>
-                  )}
-                  <p>작성시간 :{date.toLocaleString()}</p>
-                  {isEdit && (
-                    <div>
-                      <button
-                        onClick={() => {
-                          setCommentEditStates({ [data.commentTime.seconds]: true });
-                        }}>
-                        수정
-                      </button>
-                      <button onClick={() => deleteCommentHandler(data.commentTime.seconds)}>삭제</button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+        {isApplyUser && (
+          <div className="ml-3 mr-3 flex flex-col gap-2">
+            <p>전체 댓글 {commentList.length}</p>
+            <div>
+              {commentList.map(data => {
+                const date = new Date(data.commentTime.seconds * 1000 + data.commentTime.nanoseconds / 1000000);
+                const isEdit = currentUser.id === data.commentWriter;
+                return (
+                  <div key={data.commentTime.seconds}>
+                    <p>작성자 : {data.commentNickName}</p>
+                    {!commentEditStates[data.commentTime.seconds] && <p>댓글내용 : {data.commentContent}</p>}
+                    {commentEditStates[data.commentTime.seconds] && (
+                      <div>
+                        <input
+                          type="text"
+                          value={editContent}
+                          onChange={e => {
+                            setEditContent(e.target.value);
+                          }}
+                        />
+                        <button onClick={() => editCommentContentHandler(data.commentTime.seconds)}>확인</button>
+                        <button onClick={() => setCommentEditStates({})}>취소</button>
+                      </div>
+                    )}
+                    <p>작성시간 :{date.toLocaleString()}</p>
+                    {isEdit && (
+                      <div>
+                        <button
+                          onClick={() => {
+                            setCommentEditStates({ [data.commentTime.seconds]: true });
+                          }}>
+                          수정
+                        </button>
+                        <button onClick={() => deleteCommentHandler(data.commentTime.seconds)}>삭제</button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <form onSubmit={addCommentHandler}>
+              <label>
+                <textarea
+                  type="text"
+                  value={comment}
+                  onChange={e => {
+                    setComment(e.target.value);
+                  }}
+                />
+              </label>
+              <button>작성하기</button>
+            </form>
           </div>
-          <form onSubmit={addCommentHandler}>
-            <label>
-              <textarea
-                type="text"
-                value={comment}
-                onChange={e => {
-                  setComment(e.target.value);
-                }}
-              />
-            </label>
-            <button>작성하기</button>
-          </form>
-        </div>
-      )}
-      <button
-        onClick={() => {
-          navigate('/search');
-        }}>
-        목록
-      </button>
+        )}
+        <button
+          onClick={() => {
+            navigate('/search');
+          }}>
+          목록
+        </button>
+      </div>
     </div>
   );
 }
