@@ -15,10 +15,10 @@ export default function PostingCard({ data }) {
           </div>
         </div>
       </td>
-      <td>{data.category}</td>
-      <td>{data.count}</td>
-      <td>{data.date}</td>
-      <td>{data.location}</td>
+      <td className="text-center">{data.category}</td>
+      <td className="text-center">{data.count}</td>
+      <td className="text-center">{data.date}</td>
+      <td className="text-center">{data.location}</td>
       <th>
         <Link to={'/postingDetails'} state={{ selectedPostingId: data.id }}>
           <button className="btn btn-ghost btn-xs">상세정보</button>
