@@ -46,7 +46,6 @@ export default function PostingDetails() {
 
     fetchData();
   }, []);
-  console.log(selectedPostingData);
 
   useEffect(() => {
     setApplicantList(selectedPostingData.applicantList ?? []);

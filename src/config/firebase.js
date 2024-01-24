@@ -196,7 +196,6 @@ const addPostingData = async ({ writer, writerNickName, title, category, date, c
 const fetchPostingData = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, 'post'));
-    // console.log(querySnapshot);
     const data = [];
 
     querySnapshot.forEach(doc => {

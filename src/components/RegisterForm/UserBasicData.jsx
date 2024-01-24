@@ -33,7 +33,7 @@ export default function UserBasicData() {
   });
 
   const isGoogle = auth.currentUser?.providerData[0]?.providerId === 'google.com';
-  console.log(formData);
+
   useEffect(() => {
     if (toggleIsConfirmState()) {
       setIsConfirm(true);

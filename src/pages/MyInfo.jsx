@@ -20,7 +20,6 @@ export default function MyInfo() {
     setIsEdit(!isEdit);
   };
 
-  console.log(myInfo);
   return (
     <div className="bg-sky-100 h-screen text-slate-500 font-bold flex flex-col items-center gap-3">
       <div>
