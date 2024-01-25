@@ -193,7 +193,7 @@ export default function PostingDetails() {
   return (
     <div
       className={`bg-sky-100 ${
-        isApplyUser ? `h-full` : `h-screen`
+        isApplyUser ? `h-screen` : `h-screen`
       } text-slate-500 font-bold flex flex-col items-center`}>
       {loading ? (
         <div className="flex items-center justify-center">

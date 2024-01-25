@@ -1,6 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { updateData, userAccountDelete, deleteUserData, fetchPostingData, updatePostingData } from '../config/firebase';
+import {
+  updateData,
+  userAccountDelete,
+  deleteUserData,
+  fetchPostingData,
+  updatePostingData,
+  deletePostingData,
+  fetchData,
+} from '../config/firebase';
 
 export default function MyInfo() {
   const navigate = useNavigate();
@@ -36,6 +44,22 @@ export default function MyInfo() {
         };
         await updatePostingData(data.id, newData);
       }
+
+      const currentUserPostingData = allPostingData.filter(({ writer }) => writer === myInfo.id);
+      const allUserData = await fetchData();
+      for (const data of currentUserPostingData) {
+        for (const userId of data.applicantList) {
+          const targetUserData = allUserData.filter(({ id }) => userId === id);
+          const newUserApplyPosting = targetUserData.userApplyPosting?.filter(postingId !== data.id);
+          const newData = {
+            ...targetUserData,
+            newUserApplyPosting: newUserApplyPosting,
+          };
+          await updateData(targetUserData.id, newData);
+        }
+        await deletePostingData(data.id);
+      }
+
       await deleteUserData(myInfo.id);
       await userAccountDelete();
       alert('계정 삭제가 완료되었습니다! 처음 화면으로 돌아갑니다.');
