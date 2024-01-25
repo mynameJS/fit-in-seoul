@@ -25,7 +25,7 @@ export default function LoginForm() {
       navigate('/home');
       return;
     }
-    if (result === 1) {
+    if (result[1] === 1) {
       alert('비밀번호가 틀립니다');
       return;
     }
