@@ -36,3 +36,8 @@
 - Recoil
 - React-router-dom
 - ESLint
+
+### **💪 시연 영상 **
+
+- [시연영상](https://reinvented-foxtrot-432.notion.site/Fit-In-Seoul-40b84c02b9604e78a5d0158d5e53bf33)
+
